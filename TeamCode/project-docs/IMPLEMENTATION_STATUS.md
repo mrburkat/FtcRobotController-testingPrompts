@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 3 complete, pending student review
-- Last completed prompt: Prompt 3: Implement the reusable FSM core
-- Last verified commit: 7876756
+- Current sequential prompt: Prompt 4 complete, pending student review
+- Last completed prompt: Prompt 4: Create the hardware abstraction layer
+- Last verified commit: 7c6cbd5
 
 ## Completed work
 
@@ -40,6 +40,15 @@
     - `core.fsm.FSM`
 - Prompt 3 made transition evaluation deterministic by preserving registration
   order and allowing at most one transition per update cycle.
+- Prompt 4 added the shared hardware abstraction layer:
+    - `common.hardware.DriveHardware`
+    - `common.hardware.IntakeHardware`
+    - `common.hardware.VisionHardware`
+    - `common.hardware.RobotHardware`
+- Prompt 4 followed the active hardware-abstraction branch and prompt text even
+  though the previous status entry listed input manager as the next task.
+- Prompt 4 documented and implemented the required-versus-optional hardware
+  policy: drive motors are required; intake and vision are optional.
 
 ## Current public APIs
 
@@ -81,6 +90,47 @@
   insertion order, fires at most one transition, and updates the active state
   after the transition decision. If a transition fires, the newly active state is
   updated in that same cycle.
+- `org.firstinspires.ftc.teamcode.common.hardware.DriveHardware`
+    - hardware name constants: `FRONT_LEFT_NAME`, `FRONT_RIGHT_NAME`,
+      `REAR_LEFT_NAME`, `REAR_RIGHT_NAME`
+    - `void initialize(HardwareMap hardwareMap)`
+    - `void setMotorPowers(double frontLeftPower, double frontRightPower, double rearLeftPower, double rearRightPower)`
+    - `void stop()`
+    - `void setBrakeMode()`
+    - `void setFloatMode()`
+    - `double getLastFrontLeftPower()`
+    - `double getLastFrontRightPower()`
+    - `double getLastRearLeftPower()`
+    - `double getLastRearRightPower()`
+- `org.firstinspires.ftc.teamcode.common.hardware.IntakeHardware`
+    - hardware name constant: `INTAKE_MOTOR_NAME`
+    - `void initialize(HardwareMap hardwareMap)`
+    - `void forward()`
+    - `void reverse()`
+    - `void stop()`
+    - `boolean isAvailable()`
+    - `double getLastPower()`
+- `org.firstinspires.ftc.teamcode.common.hardware.VisionHardware`
+    - `void initialize(HardwareMap hardwareMap)`
+    - `void update()`
+    - `void stop()`
+    - `boolean isAvailable()`
+- `org.firstinspires.ftc.teamcode.common.hardware.RobotHardware`
+    - `void initialize(HardwareMap hardwareMap)`
+    - `DriveHardware getDriveHardware()`
+    - `IntakeHardware getIntakeHardware()`
+    - `VisionHardware getVisionHardware()`
+    - `void stopAll()`
+- Drive motor names are centralized as `frontLeft`, `frontRight`, `rearLeft`,
+  and `rearRight`. Intake motor name is centralized as `intake`.
+- Drive initialization sets left motors forward, right motors reverse, BRAKE
+  zero-power behavior, and `RUN_WITHOUT_ENCODER`.
+- Drive power commands are clamped to the safe FTC range of -1.0 through 1.0,
+  reject `NaN`, and are stored for telemetry.
+- Missing required drive motors throw `IllegalStateException` identifying the
+  missing configured name. Missing intake hardware safely reports unavailable.
+- Vision is a lifecycle-only placeholder and reports unavailable until a later
+  prompt adds a real vision device.
 
 ## Build status
 
@@ -90,7 +140,7 @@
 - TeamCode build command:
     - macOS/Linux: `./gradlew TeamCode:assembleDebug`
     - Windows: `.\gradlew.bat TeamCode:assembleDebug`
-- Last result: PASS during Prompt 3 using Android Studio JDK 21. The build
+- Last result: PASS during Prompt 4 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -101,12 +151,14 @@
   tag.
 - Configure branch protection and pull-request review.
 - Consider adding compile-only GitHub Actions validation.
-- Prompt 3 intentionally does not create concrete subsystems, OpModes, input
-  classes, autonomous classes, hardware wrappers, or a scheduler.
+- Prompt 4 intentionally does not create concrete subsystems, OpModes, input
+  classes, autonomous classes, FSM behavior inside hardware wrappers, camera
+  behavior, AprilTag processing, OpenCV processing, VisionPortal behavior, or a
+  scheduler.
 
 ## Next planned task
 
-Prompt 4: Create shared input manager.
+Prompt 5: Create shared input manager.
 
 ## Update instructions
 
