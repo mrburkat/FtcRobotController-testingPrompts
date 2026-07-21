@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 2 complete, pending student review
-- Last completed prompt: Prompt 2: Create the Subsystem lifecycle and Robot base class
-- Last verified commit: f224654
+- Current sequential prompt: Prompt 3 complete, pending student review
+- Last completed prompt: Prompt 3: Implement the reusable FSM core
+- Last verified commit: 7876756
 
 ## Completed work
 
@@ -34,6 +34,12 @@
     - `core.robot.Robot`
 - Prompt 2 made `Robot` own subsystem registration, initialization, update, and
   stop order directly without adding a scheduler or subsystem manager.
+- Prompt 3 added the reusable finite-state-machine API:
+    - `core.fsm.State`
+    - `core.fsm.Transition`
+    - `core.fsm.FSM`
+- Prompt 3 made transition evaluation deterministic by preserving registration
+  order and allowing at most one transition per update cycle.
 
 ## Current public APIs
 
@@ -53,6 +59,28 @@
   error and throws `IllegalArgumentException`.
 - Registering a subsystem after robot initialization has started throws
   `IllegalStateException`.
+- `org.firstinspires.ftc.teamcode.core.fsm.State`
+    - `void enter()`
+    - `void update()`
+    - `void exit()`
+    - `String getName()`
+- `org.firstinspires.ftc.teamcode.core.fsm.Transition`
+    - `Transition(State sourceState, State targetState, BooleanSupplier condition)`
+    - `State getSourceState()`
+    - `State getTargetState()`
+    - `boolean appliesTo(State currentState)`
+    - `boolean isConditionSatisfied()`
+- `org.firstinspires.ftc.teamcode.core.fsm.FSM`
+    - `FSM(State initialState)`
+    - `void addTransition(Transition transition)`
+    - `void start()`
+    - `void update()`
+    - `State getCurrentState()`
+    - `String getCurrentStateName()`
+- `FSM.update()` starts the initial state if needed, checks transitions in
+  insertion order, fires at most one transition, and updates the active state
+  after the transition decision. If a transition fires, the newly active state is
+  updated in that same cycle.
 
 ## Build status
 
@@ -62,7 +90,7 @@
 - TeamCode build command:
     - macOS/Linux: `./gradlew TeamCode:assembleDebug`
     - Windows: `.\gradlew.bat TeamCode:assembleDebug`
-- Last result: PASS during Prompt 2 using Android Studio JDK 21. The build
+- Last result: PASS during Prompt 3 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -73,13 +101,12 @@
   tag.
 - Configure branch protection and pull-request review.
 - Consider adding compile-only GitHub Actions validation.
-- Prompt 2 intentionally does not create concrete subsystems, OpModes,
-  finite-state-machine classes, input classes, autonomous classes, or hardware
-  wrappers.
+- Prompt 3 intentionally does not create concrete subsystems, OpModes, input
+  classes, autonomous classes, hardware wrappers, or a scheduler.
 
 ## Next planned task
 
-Prompt 3: Create core finite-state-machine interfaces and classes.
+Prompt 4: Create shared input manager.
 
 ## Update instructions
 
