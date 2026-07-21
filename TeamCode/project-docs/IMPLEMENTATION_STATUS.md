@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 1 complete, pending student review
-- Last completed prompt: Prompt 1: Inspect the FTC project and create the package structure
-- Last verified commit: 8efc30c
+- Current sequential prompt: Prompt 2 complete, pending student review
+- Last completed prompt: Prompt 2: Create the Subsystem lifecycle and Robot base class
+- Last verified commit: f224654
 
 ## Completed work
 
@@ -29,12 +29,30 @@
     - `opmodes.autonomous`
     - `opmodes.testing`
 - Prompt 1 confirmed the top-level TeamCode docs directory is `TeamCode/project-docs`.
+- Prompt 2 added the core robot lifecycle API:
+    - `core.robot.Subsystem`
+    - `core.robot.Robot`
+- Prompt 2 made `Robot` own subsystem registration, initialization, update, and
+  stop order directly without adding a scheduler or subsystem manager.
 
 ## Current public APIs
 
-None created by the sequential architecture exercise yet. Prompt 1 added only
-package-level documentation files and no public classes, interfaces, methods, or
-fields.
+- `org.firstinspires.ftc.teamcode.core.robot.Subsystem`
+    - `void initialize()`
+    - `void update()`
+    - `void stop()`
+    - `String getName()`
+- `org.firstinspires.ftc.teamcode.core.robot.Robot`
+    - `protected final void registerSubsystem(Subsystem subsystem)`
+    - `public final void initialize()`
+    - `public final void update()`
+    - `public final void stop()`
+    - `protected void onInitialize()`
+    - `protected void onStop()`
+- Duplicate registration of the same subsystem instance is a clear programming
+  error and throws `IllegalArgumentException`.
+- Registering a subsystem after robot initialization has started throws
+  `IllegalStateException`.
 
 ## Build status
 
@@ -44,7 +62,7 @@ fields.
 - TeamCode build command:
     - macOS/Linux: `./gradlew TeamCode:assembleDebug`
     - Windows: `.\gradlew.bat TeamCode:assembleDebug`
-- Last result: PASS during Prompt 1 using Android Studio JDK 21. The build
+- Last result: PASS during Prompt 2 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -55,12 +73,13 @@ fields.
   tag.
 - Configure branch protection and pull-request review.
 - Consider adding compile-only GitHub Actions validation.
-- Prompt 1 intentionally does not create framework classes, OpModes, subsystem
-  implementations, or hardware wrappers.
+- Prompt 2 intentionally does not create concrete subsystems, OpModes,
+  finite-state-machine classes, input classes, autonomous classes, or hardware
+  wrappers.
 
 ## Next planned task
 
-Prompt 2: Create core finite-state-machine interfaces and classes.
+Prompt 3: Create core finite-state-machine interfaces and classes.
 
 ## Update instructions
 
