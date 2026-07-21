@@ -15,6 +15,9 @@ This document defines the intended architecture for the shared PVI-FTC baseline.
 
 ## Intended package map
 
+All package names below are relative to the actual TeamCode root package
+`org.firstinspires.ftc.teamcode`.
+
 core.fsm
 - State
 - Transition
