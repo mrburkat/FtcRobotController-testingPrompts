@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 4 complete, pending student review
-- Last completed prompt: Prompt 4: Create the hardware abstraction layer
-- Last verified commit: 7c6cbd5
+- Current sequential prompt: Prompt 5 complete, pending student review
+- Last completed prompt: Prompt 5: Implement the drive subsystem and drive FSM
+- Last verified commit: c6b6b95
 
 ## Completed work
 
@@ -49,6 +49,15 @@
   though the previous status entry listed input manager as the next task.
 - Prompt 4 documented and implemented the required-versus-optional hardware
   policy: drive motors are required; intake and vision are optional.
+- Prompt 5 added the shared drive subsystem and drive FSM:
+    - `common.subsystems.drive.DriveSubsystem`
+    - `common.subsystems.drive.DisabledDriveState`
+    - `common.subsystems.drive.ManualDriveState`
+    - `common.subsystems.drive.HeadingHoldState`
+- Prompt 5 followed the active drive-subsystem branch and prompt text even
+  though the previous status entry listed input manager as the next task.
+- Prompt 5 centralized mecanum wheel-power calculation in `DriveSubsystem` and
+  used the existing reusable FSM API for drive mode transitions.
 
 ## Current public APIs
 
@@ -131,6 +140,38 @@
   missing configured name. Missing intake hardware safely reports unavailable.
 - Vision is a lifecycle-only placeholder and reports unavailable until a later
   prompt adds a real vision device.
+- `org.firstinspires.ftc.teamcode.common.subsystems.drive.DriveSubsystem`
+    - `DriveSubsystem(DriveHardware driveHardware)`
+    - `void initialize()`
+    - `void update()`
+    - `void stop()`
+    - `String getName()`
+    - `void drive(double forward, double strafe, double rotate)`
+    - `void enableManualDrive()`
+    - `void disableDrive()`
+    - `void enableHeadingHold()`
+    - `String getCurrentStateName()`
+    - `double getRequestedForward()`
+    - `double getRequestedStrafe()`
+    - `double getRequestedRotate()`
+- `org.firstinspires.ftc.teamcode.common.subsystems.drive.DisabledDriveState`
+    - Implements `State`; stops all drive output while active.
+- `org.firstinspires.ftc.teamcode.common.subsystems.drive.ManualDriveState`
+    - Implements `State`; applies stored mecanum drive requests.
+- `org.firstinspires.ftc.teamcode.common.subsystems.drive.HeadingHoldState`
+    - Implements `State`; honest placeholder that allows translation and
+      suppresses rotation until heading feedback is added later.
+- Drive mode requests update an internal requested mode used by deterministic
+  FSM transitions. External code does not set FSM state directly.
+- Manual drive uses:
+    - `frontLeft = forward + strafe + rotate`
+    - `frontRight = forward - strafe - rotate`
+    - `rearLeft = forward - strafe + rotate`
+    - `rearRight = forward + strafe - rotate`
+- Wheel powers are normalized so no absolute value exceeds 1.0 before being sent
+  to `DriveHardware`.
+- Drive input requests are clamped to -1.0 through 1.0, reject `NaN`, and are
+  exposed for telemetry.
 
 ## Build status
 
@@ -140,7 +181,7 @@
 - TeamCode build command:
     - macOS/Linux: `./gradlew TeamCode:assembleDebug`
     - Windows: `.\gradlew.bat TeamCode:assembleDebug`
-- Last result: PASS during Prompt 4 using Android Studio JDK 21. The build
+- Last result: PASS during Prompt 5 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -151,14 +192,13 @@
   tag.
 - Configure branch protection and pull-request review.
 - Consider adding compile-only GitHub Actions validation.
-- Prompt 4 intentionally does not create concrete subsystems, OpModes, input
-  classes, autonomous classes, FSM behavior inside hardware wrappers, camera
-  behavior, AprilTag processing, OpenCV processing, VisionPortal behavior, or a
-  scheduler.
+- Prompt 5 intentionally does not create OpModes, input classes, autonomous
+  classes, hardware wrappers, IMU correction, encoder driving, trajectory
+  driving, or a scheduler.
 
 ## Next planned task
 
-Prompt 5: Create shared input manager.
+Prompt 6: Create shared input manager.
 
 ## Update instructions
 
