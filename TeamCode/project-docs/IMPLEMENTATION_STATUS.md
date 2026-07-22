@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 5 complete, pending student review
-- Last completed prompt: Prompt 5: Implement the drive subsystem and drive FSM
-- Last verified commit: c6b6b95
+- Current sequential prompt: Prompt 6 complete, pending student review
+- Last completed prompt: Prompt 6: Create Team A robot composition
+- Last verified commit: 895e732
 
 ## Completed work
 
@@ -58,6 +58,15 @@
   though the previous status entry listed input manager as the next task.
 - Prompt 5 centralized mecanum wheel-power calculation in `DriveSubsystem` and
   used the existing reusable FSM API for drive mode transitions.
+- Prompt 6 added Team A robot composition:
+    - `robots.teamA.TeamARobot`
+- Prompt 6 followed the active Team A robot branch and prompt text even though
+  the previous status entry listed input manager as the next task.
+- Prompt 6 established the Team A hardware initialization boundary at
+  `TeamARobot.initialize(HardwareMap)`, which initializes `RobotHardware` before
+  the inherited robot lifecycle initializes registered subsystems.
+- Prompt 6 registers `DriveSubsystem` exactly once and exposes robot-level drive
+  commands and narrow telemetry diagnostics without exposing mutable FSM internals.
 
 ## Current public APIs
 
@@ -172,6 +181,29 @@
   to `DriveHardware`.
 - Drive input requests are clamped to -1.0 through 1.0, reject `NaN`, and are
   exposed for telemetry.
+- `org.firstinspires.ftc.teamcode.robots.teamA.TeamARobot`
+    - `TeamARobot()`
+    - `TeamARobot(RobotHardware robotHardware)`
+    - `void initialize(HardwareMap hardwareMap)`
+    - `void drive(double forward, double strafe, double rotate)`
+    - `void enableManualDrive()`
+    - `void disableDrive()`
+    - `void enableHeadingHold()`
+    - `String getDriveStateName()`
+    - `double getRequestedForward()`
+    - `double getRequestedStrafe()`
+    - `double getRequestedRotate()`
+    - `double getLastFrontLeftPower()`
+    - `double getLastFrontRightPower()`
+    - `double getLastRearLeftPower()`
+    - `double getLastRearRightPower()`
+    - `boolean isIntakeAvailable()`
+    - `boolean isVisionAvailable()`
+- `TeamARobot` subclasses `Robot`, owns `RobotHardware`, creates a
+  `DriveSubsystem` from `RobotHardware.getDriveHardware()`, and registers that
+  subsystem once in the constructor.
+- `TeamARobot` does not read driver controls, directly fetch configured devices,
+  expose the drive FSM, or define any OpMode entry point.
 
 ## Build status
 
@@ -181,7 +213,7 @@
 - TeamCode build command:
     - macOS/Linux: `./gradlew TeamCode:assembleDebug`
     - Windows: `.\gradlew.bat TeamCode:assembleDebug`
-- Last result: PASS during Prompt 5 using Android Studio JDK 21. The build
+- Last result: PASS during Prompt 6 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -192,13 +224,13 @@
   tag.
 - Configure branch protection and pull-request review.
 - Consider adding compile-only GitHub Actions validation.
-- Prompt 5 intentionally does not create OpModes, input classes, autonomous
-  classes, hardware wrappers, IMU correction, encoder driving, trajectory
-  driving, or a scheduler.
+- Prompt 6 intentionally does not create OpModes, input classes, autonomous
+  classes, additional hardware wrappers, intake or vision subsystems, IMU
+  correction, encoder driving, trajectory driving, or a scheduler.
 
 ## Next planned task
 
-Prompt 6: Create shared input manager.
+Prompt 7: Create shared input manager.
 
 ## Update instructions
 
