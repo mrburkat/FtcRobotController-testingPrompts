@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.common.hardware.DriveHardware;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.drive.DriveSubsystem;
+import org.firstinspires.ftc.teamcode.common.subsystems.intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.core.robot.Robot;
 
 /**
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.core.robot.Robot;
 public class TeamARobot extends Robot {
     private final RobotHardware robotHardware;
     private final DriveSubsystem driveSubsystem;
+    private final IntakeSubsystem intakeSubsystem;
     private boolean hardwareInitialized;
 
     /**
@@ -30,7 +32,7 @@ public class TeamARobot extends Robot {
      * Creates Team A's robot using supplied hardware wrappers.
      *
      * <p>This constructor keeps composition explicit and testable while still
-     * registering the drive subsystem exactly once.</p>
+     * registering each subsystem exactly once.</p>
      *
      * @param robotHardware the shared hardware wrapper composition
      */
@@ -41,7 +43,9 @@ public class TeamARobot extends Robot {
 
         this.robotHardware = robotHardware;
         driveSubsystem = new DriveSubsystem(robotHardware.getDriveHardware());
+        intakeSubsystem = new IntakeSubsystem(robotHardware.getIntakeHardware());
         registerSubsystem(driveSubsystem);
+        registerSubsystem(intakeSubsystem);
     }
 
     /**
@@ -95,10 +99,45 @@ public class TeamARobot extends Robot {
     }
 
     /**
+     * Requests intake mode.
+     */
+    public void startIntake() {
+        intakeSubsystem.startIntake();
+    }
+
+    /**
+     * Requests safe idle intake mode.
+     */
+    public void stopIntake() {
+        intakeSubsystem.stopIntake();
+    }
+
+    /**
+     * Requests baseline holding mode.
+     */
+    public void holdIntake() {
+        intakeSubsystem.hold();
+    }
+
+    /**
+     * Requests ejecting mode.
+     */
+    public void ejectIntake() {
+        intakeSubsystem.eject();
+    }
+
+    /**
      * Returns the current drive state name for telemetry.
      */
     public String getDriveStateName() {
         return driveSubsystem.getCurrentStateName();
+    }
+
+    /**
+     * Returns the current intake state name for telemetry.
+     */
+    public String getIntakeStateName() {
+        return intakeSubsystem.getCurrentStateName();
     }
 
     /**
@@ -154,7 +193,7 @@ public class TeamARobot extends Robot {
      * Reports whether the optional intake hardware is available.
      */
     public boolean isIntakeAvailable() {
-        return robotHardware.getIntakeHardware().isAvailable();
+        return intakeSubsystem.isAvailable();
     }
 
     /**

@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 9 complete, pending student review
-- Last completed prompt: Prompt 9: Implement the intake subsystem FSM
-- Last verified commit: 8d323d
+- Current sequential prompt: Prompt 10 complete, pending student review
+- Last completed prompt: Prompt 10: Integrate Team A intake through Robot and TeleOp
+- Last verified commit: 87c2149
 
 ## Completed work
 
@@ -96,6 +96,18 @@
 - Prompt 9 added a narrow `IntakeHardware.setPower(double)` API so intake and
   eject states can use named configurable powers while preserving the existing
   `forward()`, `reverse()`, and `stop()` methods.
+- Prompt 10 integrated the shared intake subsystem into Team A robot
+  composition and TeleOp:
+    - `robots.teamA.TeamARobot`
+    - `opmodes.teleop.TeamATeleOp`
+- Prompt 10 makes `TeamARobot` create `IntakeSubsystem` from the existing
+  optional `IntakeHardware`, register it exactly once, and expose narrow intake
+  request and telemetry methods without exposing the FSM or state instances.
+- Prompt 10 maps `gamepad2` button edges in `TeamATeleOp`: A starts intake, B
+  stops intake, X ejects, and Y requests hold. Existing `gamepad1` drive
+  mappings are preserved.
+- Prompt 10 adds intake state and intake hardware availability to TeleOp
+  telemetry.
 
 ## Current public APIs
 
@@ -222,7 +234,12 @@
     - `void enableManualDrive()`
     - `void disableDrive()`
     - `void enableHeadingHold()`
+    - `void startIntake()`
+    - `void stopIntake()`
+    - `void holdIntake()`
+    - `void ejectIntake()`
     - `String getDriveStateName()`
+    - `String getIntakeStateName()`
     - `double getRequestedForward()`
     - `double getRequestedStrafe()`
     - `double getRequestedRotate()`
@@ -233,10 +250,11 @@
     - `boolean isIntakeAvailable()`
     - `boolean isVisionAvailable()`
 - `TeamARobot` subclasses `Robot`, owns `RobotHardware`, creates a
-  `DriveSubsystem` from `RobotHardware.getDriveHardware()`, and registers that
+  `DriveSubsystem` from `RobotHardware.getDriveHardware()`, creates an
+  `IntakeSubsystem` from `RobotHardware.getIntakeHardware()`, and registers each
   subsystem once in the constructor.
 - `TeamARobot` does not read driver controls, directly fetch configured devices,
-  expose the drive FSM, or define any OpMode entry point.
+  expose drive or intake FSMs, or define any OpMode entry point.
 - `org.firstinspires.ftc.teamcode.core.input.InputManager`
     - `void update(Gamepad gamepad)`
     - `boolean isAHeld()`
@@ -281,8 +299,14 @@
     - `rotate = gamepad1.right_stick_x`
 - `TeamATeleOp` requests heading-hold mode when gamepad1 Y is just pressed and
   requests manual drive mode when gamepad1 X is just pressed.
+- `TeamATeleOp` uses a second `InputManager` for `gamepad2` operator controls:
+    - A just pressed: `TeamARobot.startIntake()`
+    - B just pressed: `TeamARobot.stopIntake()`
+    - X just pressed: `TeamARobot.ejectIntake()`
+    - Y just pressed: `TeamARobot.holdIntake()`
 - `TeamATeleOp` reports drive state, requested forward/strafe/rotate values,
-  and the four last commanded wheel powers exposed by `TeamARobot`.
+  intake state, intake availability, and the four last commanded wheel powers
+  exposed by `TeamARobot`.
 - `org.firstinspires.ftc.teamcode.common.subsystems.intake.IntakeSubsystem`
     - constants: `DEFAULT_INTAKE_POWER`, `DEFAULT_EJECT_POWER`
     - `IntakeSubsystem(IntakeHardware intakeHardware)`
@@ -323,7 +347,9 @@
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
 - Prompt 9 validation command:
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
-- Last result: PASS during Prompt 9 using Android Studio JDK 21. The build
+- Prompt 10 validation command:
+    - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
+- Last result: PASS during Prompt 10 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -339,14 +365,18 @@
   profiles, direct hardware access, or a scheduler.
 - Prompt 8 uses the existing placeholder heading-hold mode; later heading
   feedback work is still needed before it can hold a real field heading.
-- Prompt 9 does not register `IntakeSubsystem` with Team A robot composition or
-  add TeleOp button mappings; those are left for a later prompt.
 - Prompt 9 does not add sensors, automatic hold detection, timed ejection, or
   team-specific intake geometry.
+- Prompt 10 keeps intake optional. If the configured intake motor is absent,
+  Team A robot still initializes and drives because `IntakeHardware` remains in
+  its safe unavailable no-op state.
+- Prompt 10 does not add intake controls to `gamepad1`, autonomous intake
+  commands, sensors, automatic hold detection, timed ejection, or team-specific
+  intake geometry.
 
 ## Next planned task
 
-Prompt 10: To be supplied by the sequential exercise.
+Prompt 11: To be supplied by the sequential exercise.
 
 ## Update instructions
 
