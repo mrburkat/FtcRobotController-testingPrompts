@@ -45,21 +45,34 @@ public class IntakeHardware {
      * Runs the intake forward at full power when available.
      */
     public void forward() {
-        setPowerIfAvailable(1.0);
+        setPower(1.0);
     }
 
     /**
      * Runs the intake backward at full power when available.
      */
     public void reverse() {
-        setPowerIfAvailable(-1.0);
+        setPower(-1.0);
     }
 
     /**
      * Stops the intake when available.
      */
     public void stop() {
-        setPowerIfAvailable(0.0);
+        setPower(0.0);
+    }
+
+    /**
+     * Sets the intake motor power after clamping it to the safe FTC motor range.
+     *
+     * <p>When the optional intake motor is unavailable, this command is a safe
+     * no-op and the stored telemetry power remains 0.0.</p>
+     *
+     * @param power requested intake power
+     * @throws IllegalArgumentException if {@code power} is not a number
+     */
+    public void setPower(double power) {
+        setPowerIfAvailable(clampPower(power));
     }
 
     /**
@@ -88,5 +101,18 @@ public class IntakeHardware {
 
         lastPower = power;
         intakeMotor.setPower(lastPower);
+    }
+
+    private double clampPower(double power) {
+        if (Double.isNaN(power)) {
+            throw new IllegalArgumentException("Intake motor power cannot be NaN.");
+        }
+        if (power > 1.0) {
+            return 1.0;
+        }
+        if (power < -1.0) {
+            return -1.0;
+        }
+        return power;
     }
 }

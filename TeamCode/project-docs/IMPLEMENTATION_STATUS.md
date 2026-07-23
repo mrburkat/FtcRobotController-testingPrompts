@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 8 complete, pending student review
-- Last completed prompt: Prompt 8: Implement Team A TeleOp with four-wheel mecanum drive
-- Last verified commit: ef6745b
+- Current sequential prompt: Prompt 9 complete, pending student review
+- Last completed prompt: Prompt 9: Implement the intake subsystem FSM
+- Last verified commit: 8d323d
 
 ## Completed work
 
@@ -82,6 +82,20 @@
   reports drive diagnostics through telemetry.
 - Prompt 8 keeps hardware access, mecanum math, drive FSM details, intake, and
   vision behavior out of the OpMode.
+- Prompt 9 added the shared intake subsystem and intake FSM:
+    - `common.subsystems.intake.IntakeSubsystem`
+    - `common.subsystems.intake.IdleIntakeState`
+    - `common.subsystems.intake.IntakingState`
+    - `common.subsystems.intake.HoldingState`
+    - `common.subsystems.intake.EjectingState`
+- Prompt 9 made `IntakeSubsystem` own the intake FSM and expose request methods
+  instead of exposing concrete state selection to callers.
+- Prompt 9 keeps intake hardware optional. If the configured intake motor is
+  missing, all intake states remain safe no-ops through `IntakeHardware`, and
+  drivetrain operation remains unaffected.
+- Prompt 9 added a narrow `IntakeHardware.setPower(double)` API so intake and
+  eject states can use named configurable powers while preserving the existing
+  `forward()`, `reverse()`, and `stop()` methods.
 
 ## Current public APIs
 
@@ -141,6 +155,7 @@
     - `void forward()`
     - `void reverse()`
     - `void stop()`
+    - `void setPower(double power)`
     - `boolean isAvailable()`
     - `double getLastPower()`
 - `org.firstinspires.ftc.teamcode.common.hardware.VisionHardware`
@@ -164,6 +179,9 @@
   missing configured name. Missing intake hardware safely reports unavailable.
 - Vision is a lifecycle-only placeholder and reports unavailable until a later
   prompt adds a real vision device.
+- `IntakeHardware.setPower(double)` clamps commands to the safe FTC range of
+  -1.0 through 1.0, rejects `NaN`, and is a safe no-op with stored power 0.0
+  when the optional intake motor is unavailable.
 - `org.firstinspires.ftc.teamcode.common.subsystems.drive.DriveSubsystem`
     - `DriveSubsystem(DriveHardware driveHardware)`
     - `void initialize()`
@@ -265,6 +283,33 @@
   requests manual drive mode when gamepad1 X is just pressed.
 - `TeamATeleOp` reports drive state, requested forward/strafe/rotate values,
   and the four last commanded wheel powers exposed by `TeamARobot`.
+- `org.firstinspires.ftc.teamcode.common.subsystems.intake.IntakeSubsystem`
+    - constants: `DEFAULT_INTAKE_POWER`, `DEFAULT_EJECT_POWER`
+    - `IntakeSubsystem(IntakeHardware intakeHardware)`
+    - `IntakeSubsystem(IntakeHardware intakeHardware, double intakePower, double ejectPower)`
+    - `void initialize()`
+    - `void update()`
+    - `void stop()`
+    - `String getName()`
+    - `void startIntake()`
+    - `void stopIntake()`
+    - `void hold()`
+    - `void eject()`
+    - `String getCurrentStateName()`
+    - `boolean isAvailable()`
+- `IntakeSubsystem` starts in `Idle`, evaluates transitions through the shared
+  `FSM`, and stores requested intake mode internally. Repeated requests for the
+  current mode do not cause duplicate state changes.
+- `org.firstinspires.ftc.teamcode.common.subsystems.intake.IdleIntakeState`
+    - Implements `State`; stops intake output while active.
+- `org.firstinspires.ftc.teamcode.common.subsystems.intake.IntakingState`
+    - Implements `State`; runs intake forward using the configured intake power.
+- `org.firstinspires.ftc.teamcode.common.subsystems.intake.HoldingState`
+    - Implements `State`; stops the motor for the baseline and documents future
+      low-power holding as a possible mechanism-specific extension.
+- `org.firstinspires.ftc.teamcode.common.subsystems.intake.EjectingState`
+    - Implements `State`; runs intake in reverse using the configured eject
+      power.
 
 ## Build status
 
@@ -276,7 +321,9 @@
     - Windows: `.\gradlew.bat TeamCode:assembleDebug`
 - Prompt 8 validation command:
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
-- Last result: PASS during Prompt 8 using Android Studio JDK 21. The build
+- Prompt 9 validation command:
+    - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
+- Last result: PASS during Prompt 9 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -292,10 +339,14 @@
   profiles, direct hardware access, or a scheduler.
 - Prompt 8 uses the existing placeholder heading-hold mode; later heading
   feedback work is still needed before it can hold a real field heading.
+- Prompt 9 does not register `IntakeSubsystem` with Team A robot composition or
+  add TeleOp button mappings; those are left for a later prompt.
+- Prompt 9 does not add sensors, automatic hold detection, timed ejection, or
+  team-specific intake geometry.
 
 ## Next planned task
 
-Prompt 9: To be supplied by the sequential exercise.
+Prompt 10: To be supplied by the sequential exercise.
 
 ## Update instructions
 
