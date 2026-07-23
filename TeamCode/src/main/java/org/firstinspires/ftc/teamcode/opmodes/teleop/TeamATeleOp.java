@@ -15,7 +15,8 @@ import org.firstinspires.ftc.teamcode.robots.teamA.TeamARobot;
 @TeleOp(name = "Team A TeleOp", group = "Team A")
 public class TeamATeleOp extends OpMode {
     private TeamARobot robot;
-    private InputManager inputManager;
+    private InputManager driverInput;
+    private InputManager operatorInput;
     private boolean initialized;
 
     /**
@@ -24,7 +25,8 @@ public class TeamATeleOp extends OpMode {
     @Override
     public void init() {
         robot = new TeamARobot();
-        inputManager = new InputManager();
+        driverInput = new InputManager();
+        operatorInput = new InputManager();
 
         try {
             robot.initialize(hardwareMap);
@@ -49,7 +51,8 @@ public class TeamATeleOp extends OpMode {
     public void start() {
         ensureInitialized();
         robot.enableManualDrive();
-        inputManager.update(gamepad1);
+        driverInput.update(gamepad1);
+        operatorInput.update(gamepad2);
 
         telemetry.addData("Status", "Team A TeleOp started");
         telemetry.update();
@@ -62,8 +65,10 @@ public class TeamATeleOp extends OpMode {
     @Override
     public void loop() {
         ensureInitialized();
-        inputManager.update(gamepad1);
+        driverInput.update(gamepad1);
+        operatorInput.update(gamepad2);
         mapDriveControls();
+        mapIntakeControls();
         robot.update();
         publishTelemetry();
     }
@@ -79,23 +84,43 @@ public class TeamATeleOp extends OpMode {
     }
 
     private void mapDriveControls() {
-        double forward = -inputManager.getLeftStickY();
-        double strafe = inputManager.getLeftStickX();
-        double rotate = inputManager.getRightStickX();
+        double forward = -driverInput.getLeftStickY();
+        double strafe = driverInput.getLeftStickX();
+        double rotate = driverInput.getRightStickX();
 
         robot.drive(forward, strafe, rotate);
 
-        if (inputManager.wasYJustPressed()) {
+        if (driverInput.wasYJustPressed()) {
             robot.enableHeadingHold();
         }
 
-        if (inputManager.wasXJustPressed()) {
+        if (driverInput.wasXJustPressed()) {
             robot.enableManualDrive();
+        }
+    }
+
+    private void mapIntakeControls() {
+        if (operatorInput.wasAJustPressed()) {
+            robot.startIntake();
+        }
+
+        if (operatorInput.wasBJustPressed()) {
+            robot.stopIntake();
+        }
+
+        if (operatorInput.wasXJustPressed()) {
+            robot.ejectIntake();
+        }
+
+        if (operatorInput.wasYJustPressed()) {
+            robot.holdIntake();
         }
     }
 
     private void publishTelemetry() {
         telemetry.addData("Drive State", robot.getDriveStateName());
+        telemetry.addData("Intake State", robot.getIntakeStateName());
+        telemetry.addData("Intake Available", robot.isIntakeAvailable());
         telemetry.addData("Forward", "%.2f", robot.getRequestedForward());
         telemetry.addData("Strafe", "%.2f", robot.getRequestedStrafe());
         telemetry.addData("Rotate", "%.2f", robot.getRequestedRotate());
