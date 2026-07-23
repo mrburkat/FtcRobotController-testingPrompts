@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 7 complete, pending student review
-- Last completed prompt: Prompt 7: Implement the TeleOp InputManager
-- Last verified commit: 3627b65
+- Current sequential prompt: Prompt 8 complete, pending student review
+- Last completed prompt: Prompt 8: Implement Team A TeleOp with four-wheel mecanum drive
+- Last verified commit: ef6745b
 
 ## Completed work
 
@@ -73,6 +73,15 @@
   snapshot per OpMode loop and exposes button edge states, held states, axes,
   and triggers without knowing Team A robot composition, subsystems, hardware
   wrappers, telemetry, or autonomous routines.
+- Prompt 8 added the Team A driver-controlled OpMode:
+    - `opmodes.teleop.TeamATeleOp`
+- Prompt 8 uses the iterative FTC `OpMode` lifecycle, owns a `TeamARobot` and
+  `InputManager`, initializes Team A hardware through `TeamARobot.initialize`,
+  maps `gamepad1` sticks to Team A drive requests, maps Y/X button edges to
+  heading-hold/manual drive requests, calls `robot.update()` once per loop, and
+  reports drive diagnostics through telemetry.
+- Prompt 8 keeps hardware access, mecanum math, drive FSM details, intake, and
+  vision behavior out of the OpMode.
 
 ## Current public APIs
 
@@ -242,6 +251,20 @@
   `IllegalArgumentException`.
 - On the first update, buttons that are already held are reported as held but
   not just pressed, so startup-held buttons do not create repeated press edges.
+- `org.firstinspires.ftc.teamcode.opmodes.teleop.TeamATeleOp`
+    - FTC annotation: `@TeleOp(name = "Team A TeleOp", group = "Team A")`
+    - `void init()`
+    - `void start()`
+    - `void loop()`
+    - `void stop()`
+- `TeamATeleOp` uses standard Team A drive mappings:
+    - `forward = -gamepad1.left_stick_y`
+    - `strafe = gamepad1.left_stick_x`
+    - `rotate = gamepad1.right_stick_x`
+- `TeamATeleOp` requests heading-hold mode when gamepad1 Y is just pressed and
+  requests manual drive mode when gamepad1 X is just pressed.
+- `TeamATeleOp` reports drive state, requested forward/strafe/rotate values,
+  and the four last commanded wheel powers exposed by `TeamARobot`.
 
 ## Build status
 
@@ -251,7 +274,9 @@
 - TeamCode build command:
     - macOS/Linux: `./gradlew TeamCode:assembleDebug`
     - Windows: `.\gradlew.bat TeamCode:assembleDebug`
-- Last result: PASS during Prompt 7 using Android Studio JDK 21. The build
+- Prompt 8 validation command:
+    - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
+- Last result: PASS during Prompt 8 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -262,13 +287,15 @@
   tag.
 - Configure branch protection and pull-request review.
 - Consider adding compile-only GitHub Actions validation.
-- Prompt 7 intentionally does not create OpModes, robot-specific input mapping,
-  command objects, robot intent objects, queues, configurable profiles,
-  autonomous routines, hardware access, telemetry integration, or a scheduler.
+- Prompt 8 intentionally does not add intake controls, vision controls,
+  autonomous routines, robot intent objects, command queues, configurable input
+  profiles, direct hardware access, or a scheduler.
+- Prompt 8 uses the existing placeholder heading-hold mode; later heading
+  feedback work is still needed before it can hold a real field heading.
 
 ## Next planned task
 
-Prompt 8: Create Team A TeleOp mapping.
+Prompt 9: To be supplied by the sequential exercise.
 
 ## Update instructions
 
