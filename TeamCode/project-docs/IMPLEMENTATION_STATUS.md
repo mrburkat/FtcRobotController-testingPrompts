@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 6 complete, pending student review
-- Last completed prompt: Prompt 6: Create Team A robot composition
-- Last verified commit: 895e732
+- Current sequential prompt: Prompt 7 complete, pending student review
+- Last completed prompt: Prompt 7: Implement the TeleOp InputManager
+- Last verified commit: 3627b65
 
 ## Completed work
 
@@ -67,6 +67,12 @@
   the inherited robot lifecycle initializes registered subsystems.
 - Prompt 6 registers `DriveSubsystem` exactly once and exposes robot-level drive
   commands and narrow telemetry diagnostics without exposing mutable FSM internals.
+- Prompt 7 added the shared TeleOp input API:
+    - `core.input.InputManager`
+- Prompt 7 made `InputManager` robot-agnostic. It reads one FTC `Gamepad`
+  snapshot per OpMode loop and exposes button edge states, held states, axes,
+  and triggers without knowing Team A robot composition, subsystems, hardware
+  wrappers, telemetry, or autonomous routines.
 
 ## Current public APIs
 
@@ -204,6 +210,38 @@
   subsystem once in the constructor.
 - `TeamARobot` does not read driver controls, directly fetch configured devices,
   expose the drive FSM, or define any OpMode entry point.
+- `org.firstinspires.ftc.teamcode.core.input.InputManager`
+    - `void update(Gamepad gamepad)`
+    - `boolean isAHeld()`
+    - `boolean wasAJustPressed()`
+    - `boolean wasAJustReleased()`
+    - `boolean isBHeld()`
+    - `boolean wasBJustPressed()`
+    - `boolean wasBJustReleased()`
+    - `boolean isXHeld()`
+    - `boolean wasXJustPressed()`
+    - `boolean wasXJustReleased()`
+    - `boolean isYHeld()`
+    - `boolean wasYJustPressed()`
+    - `boolean wasYJustReleased()`
+    - `boolean isLeftBumperHeld()`
+    - `boolean wasLeftBumperJustPressed()`
+    - `boolean wasLeftBumperJustReleased()`
+    - `boolean isRightBumperHeld()`
+    - `boolean wasRightBumperJustPressed()`
+    - `boolean wasRightBumperJustReleased()`
+    - `double getLeftStickX()`
+    - `double getLeftStickY()`
+    - `double getRightStickX()`
+    - `double getRightStickY()`
+    - `double getLeftTrigger()`
+    - `double getRightTrigger()`
+- `InputManager.update(Gamepad)` must be called exactly once at the start of
+  each TeleOp loop before reading inputs. Reading input before the first update
+  throws `IllegalStateException`; passing a null `Gamepad` throws
+  `IllegalArgumentException`.
+- On the first update, buttons that are already held are reported as held but
+  not just pressed, so startup-held buttons do not create repeated press edges.
 
 ## Build status
 
@@ -213,7 +251,7 @@
 - TeamCode build command:
     - macOS/Linux: `./gradlew TeamCode:assembleDebug`
     - Windows: `.\gradlew.bat TeamCode:assembleDebug`
-- Last result: PASS during Prompt 6 using Android Studio JDK 21. The build
+- Last result: PASS during Prompt 7 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -224,13 +262,13 @@
   tag.
 - Configure branch protection and pull-request review.
 - Consider adding compile-only GitHub Actions validation.
-- Prompt 6 intentionally does not create OpModes, input classes, autonomous
-  classes, additional hardware wrappers, intake or vision subsystems, IMU
-  correction, encoder driving, trajectory driving, or a scheduler.
+- Prompt 7 intentionally does not create OpModes, robot-specific input mapping,
+  command objects, robot intent objects, queues, configurable profiles,
+  autonomous routines, hardware access, telemetry integration, or a scheduler.
 
 ## Next planned task
 
-Prompt 7: Create shared input manager.
+Prompt 8: Create Team A TeleOp mapping.
 
 ## Update instructions
 
