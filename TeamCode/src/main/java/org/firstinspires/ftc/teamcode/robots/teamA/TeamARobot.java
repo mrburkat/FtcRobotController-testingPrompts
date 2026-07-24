@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.common.hardware.DriveHardware;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.drive.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.common.subsystems.intake.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.common.subsystems.vision.VisionSubsystem;
 import org.firstinspires.ftc.teamcode.core.robot.Robot;
 
 /**
@@ -19,6 +20,7 @@ public class TeamARobot extends Robot {
     private final RobotHardware robotHardware;
     private final DriveSubsystem driveSubsystem;
     private final IntakeSubsystem intakeSubsystem;
+    private final VisionSubsystem visionSubsystem;
     private boolean hardwareInitialized;
 
     /**
@@ -44,8 +46,10 @@ public class TeamARobot extends Robot {
         this.robotHardware = robotHardware;
         driveSubsystem = new DriveSubsystem(robotHardware.getDriveHardware());
         intakeSubsystem = new IntakeSubsystem(robotHardware.getIntakeHardware());
+        visionSubsystem = new VisionSubsystem(robotHardware.getVisionHardware());
         registerSubsystem(driveSubsystem);
         registerSubsystem(intakeSubsystem);
+        registerSubsystem(visionSubsystem);
     }
 
     /**
@@ -127,6 +131,20 @@ public class TeamARobot extends Robot {
     }
 
     /**
+     * Requests vision processing when optional vision hardware is available.
+     */
+    public void enableVision() {
+        visionSubsystem.enableVision();
+    }
+
+    /**
+     * Requests safe disabled vision mode.
+     */
+    public void disableVision() {
+        visionSubsystem.disableVision();
+    }
+
+    /**
      * Returns the current drive state name for telemetry.
      */
     public String getDriveStateName() {
@@ -138,6 +156,13 @@ public class TeamARobot extends Robot {
      */
     public String getIntakeStateName() {
         return intakeSubsystem.getCurrentStateName();
+    }
+
+    /**
+     * Returns the current vision state name for telemetry.
+     */
+    public String getVisionStateName() {
+        return visionSubsystem.getCurrentStateName();
     }
 
     /**
@@ -200,7 +225,7 @@ public class TeamARobot extends Robot {
      * Reports whether the optional vision hardware is available.
      */
     public boolean isVisionAvailable() {
-        return robotHardware.getVisionHardware().isAvailable();
+        return visionSubsystem.isAvailable();
     }
 
     /**
