@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.robots.teamA;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.common.autonomous.AutonomousDriveControl;
+import org.firstinspires.ftc.teamcode.common.autonomous.AutonomousIntakeControl;
 import org.firstinspires.ftc.teamcode.common.hardware.DriveHardware;
 import org.firstinspires.ftc.teamcode.common.hardware.RobotHardware;
 import org.firstinspires.ftc.teamcode.common.subsystems.drive.DriveSubsystem;
@@ -16,7 +18,7 @@ import org.firstinspires.ftc.teamcode.core.robot.Robot;
  * focused on reading controls and reporting telemetry while this class owns the
  * robot composition boundary.</p>
  */
-public class TeamARobot extends Robot {
+public class TeamARobot extends Robot implements AutonomousDriveControl, AutonomousIntakeControl {
     private final RobotHardware robotHardware;
     private final DriveSubsystem driveSubsystem;
     private final IntakeSubsystem intakeSubsystem;
@@ -92,6 +94,14 @@ public class TeamARobot extends Robot {
      * Requests disabled drive mode.
      */
     public void disableDrive() {
+        driveSubsystem.disableDrive();
+    }
+
+    /**
+     * Requests safe stopped drive output.
+     */
+    public void stopDrive() {
+        driveSubsystem.drive(0.0, 0.0, 0.0);
         driveSubsystem.disableDrive();
     }
 
