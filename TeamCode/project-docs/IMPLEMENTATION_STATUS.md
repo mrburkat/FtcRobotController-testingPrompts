@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 14 complete, pending student review
-- Last completed prompt: Prompt 14: Implement Team A Autonomous OpMode
-- Last verified commit: 4199d0a
+- Current sequential prompt: Prompt 15 complete, pending student review
+- Last completed prompt: Prompt 15: Create Team B and Team C robot skeletons
+- Last verified commit: 1c0989c
 
 ## Completed work
 
@@ -159,6 +159,18 @@
 - Prompt 14 keeps autonomous behavior behind public robot and `AutoSequence`
   APIs. It does not use gamepads, `InputManager`, direct hardware access,
   blocking waits, trajectories, encoders, IMU, or vision guidance.
+- Prompt 15 added Team B and Team C robot composition skeletons:
+    - `robots.teamB.TeamBRobot`
+    - `robots.teamC.TeamCRobot`
+- Prompt 15 uses the existing shared `RobotHardware`, `DriveSubsystem`,
+  `IntakeSubsystem`, and `VisionSubsystem` APIs for both skeletons so the
+  robots compile and have safe baseline lifecycle behavior before team-specific
+  wiring or mechanisms are finalized.
+- Prompt 15 keeps Team B and Team C hardware assumptions explicit as TODOs
+  instead of inventing different motor names, motor directions, intake behavior,
+  vision behavior, or unique mechanisms.
+- Prompt 15 intentionally retains the small amount of composition duplication in
+  the two skeleton classes rather than adding a broad common robot base class.
 
 ## Current public APIs
 
@@ -314,6 +326,66 @@
 - `TeamARobot` implements `AutonomousDriveControl` and
   `AutonomousIntakeControl` so shared autonomous steps can call narrow robot
   APIs without depending directly on the Team A class.
+- `org.firstinspires.ftc.teamcode.robots.teamB.TeamBRobot`
+    - `TeamBRobot()`
+    - `TeamBRobot(RobotHardware robotHardware)`
+    - `void initialize(HardwareMap hardwareMap)`
+    - `void drive(double forward, double strafe, double rotate)`
+    - `void enableManualDrive()`
+    - `void disableDrive()`
+    - `void stopDrive()`
+    - `void enableHeadingHold()`
+    - `void startIntake()`
+    - `void stopIntake()`
+    - `void holdIntake()`
+    - `void ejectIntake()`
+    - `void enableVision()`
+    - `void disableVision()`
+    - `String getDriveStateName()`
+    - `String getIntakeStateName()`
+    - `String getVisionStateName()`
+    - `double getRequestedForward()`
+    - `double getRequestedStrafe()`
+    - `double getRequestedRotate()`
+    - `double getLastFrontLeftPower()`
+    - `double getLastFrontRightPower()`
+    - `double getLastRearLeftPower()`
+    - `double getLastRearRightPower()`
+    - `boolean isIntakeAvailable()`
+    - `boolean isVisionAvailable()`
+- `org.firstinspires.ftc.teamcode.robots.teamC.TeamCRobot`
+    - `TeamCRobot()`
+    - `TeamCRobot(RobotHardware robotHardware)`
+    - `void initialize(HardwareMap hardwareMap)`
+    - `void drive(double forward, double strafe, double rotate)`
+    - `void enableManualDrive()`
+    - `void disableDrive()`
+    - `void stopDrive()`
+    - `void enableHeadingHold()`
+    - `void startIntake()`
+    - `void stopIntake()`
+    - `void holdIntake()`
+    - `void ejectIntake()`
+    - `void enableVision()`
+    - `void disableVision()`
+    - `String getDriveStateName()`
+    - `String getIntakeStateName()`
+    - `String getVisionStateName()`
+    - `double getRequestedForward()`
+    - `double getRequestedStrafe()`
+    - `double getRequestedRotate()`
+    - `double getLastFrontLeftPower()`
+    - `double getLastFrontRightPower()`
+    - `double getLastRearLeftPower()`
+    - `double getLastRearRightPower()`
+    - `boolean isIntakeAvailable()`
+    - `boolean isVisionAvailable()`
+- `TeamBRobot` and `TeamCRobot` subclass `Robot`, own `RobotHardware`, create
+  and register the shared drive, intake, and vision subsystems exactly once, and
+  implement `AutonomousDriveControl` and `AutonomousIntakeControl`.
+- `TeamBRobot` and `TeamCRobot` do not define OpModes, read gamepads, directly
+  fetch configured devices, expose FSM internals, or introduce team-specific
+  hardware behavior.
 - `org.firstinspires.ftc.teamcode.core.input.InputManager`
     - `void update(Gamepad gamepad)`
     - `boolean isAHeld()`
@@ -503,7 +575,9 @@
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
 - Prompt 14 validation command:
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
-- Last result: PASS during Prompt 14 using Android Studio JDK 21. The build
+- Prompt 15 validation command:
+    - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
+- Last result: PASS during Prompt 15 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -548,10 +622,17 @@
 - Prompt 14's explicit stop steps use zero-duration timed steps to make the
   safety intent visible to students; the timed steps also stop their mechanisms
   when they finish or are canceled.
+- Prompt 15 leaves Team B and Team C on shared baseline `RobotHardware` until
+  each team documents final hardware names, directions, constants, and unique
+  mechanisms.
+- Prompt 15 does not add Team B or Team C OpModes, autonomous routines,
+  team-specific hardware wrappers, or mechanism-specific subsystem subclasses.
+- Prompt 15 keeps small robot-composition duplication in `TeamBRobot` and
+  `TeamCRobot` because a shared base class would be premature for two skeletons.
 
 ## Next planned task
 
-Prompt 15: To be supplied by the sequential exercise.
+Prompt 16: To be supplied by the sequential exercise.
 
 ## Update instructions
 
