@@ -68,6 +68,7 @@ public class TeamATeleOp extends OpMode {
         driverInput.update(gamepad1);
         operatorInput.update(gamepad2);
         mapDriveControls();
+        mapVisionControls();
         mapIntakeControls();
         robot.update();
         publishTelemetry();
@@ -99,6 +100,16 @@ public class TeamATeleOp extends OpMode {
         }
     }
 
+    private void mapVisionControls() {
+        if (driverInput.wasRightBumperJustPressed()) {
+            robot.enableVision();
+        }
+
+        if (driverInput.wasLeftBumperJustPressed()) {
+            robot.disableVision();
+        }
+    }
+
     private void mapIntakeControls() {
         if (operatorInput.wasAJustPressed()) {
             robot.startIntake();
@@ -121,6 +132,8 @@ public class TeamATeleOp extends OpMode {
         telemetry.addData("Drive State", robot.getDriveStateName());
         telemetry.addData("Intake State", robot.getIntakeStateName());
         telemetry.addData("Intake Available", robot.isIntakeAvailable());
+        telemetry.addData("Vision State", robot.getVisionStateName());
+        telemetry.addData("Vision Available", robot.isVisionAvailable());
         telemetry.addData("Forward", "%.2f", robot.getRequestedForward());
         telemetry.addData("Strafe", "%.2f", robot.getRequestedStrafe());
         telemetry.addData("Rotate", "%.2f", robot.getRequestedRotate());

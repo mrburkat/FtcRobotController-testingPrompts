@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 11 complete, pending student review
-- Last completed prompt: Prompt 11: Implement the vision subsystem FSM as a safe skeleton
-- Last verified commit: fe6a867
+- Current sequential prompt: Prompt 12 complete, pending student review
+- Last completed prompt: Prompt 12: Integrate Team A vision through Robot and TeleOp
+- Last verified commit: 64ce539
 
 ## Completed work
 
@@ -121,6 +121,19 @@
 - Prompt 11 added `reportTargetDetected(boolean)` as a temporary external
   observation hook for future processing code without exposing state instances
   or implementing a camera pipeline.
+- Prompt 12 integrated the shared vision subsystem into Team A robot
+  composition and TeleOp:
+    - `robots.teamA.TeamARobot`
+    - `opmodes.teleop.TeamATeleOp`
+- Prompt 12 makes `TeamARobot` create `VisionSubsystem` from the existing
+  optional `VisionHardware`, register it exactly once, and expose narrow vision
+  request and telemetry methods without exposing the FSM or state instances.
+- Prompt 12 maps `gamepad1` bumper edges in `TeamATeleOp`: right bumper enables
+  vision and left bumper disables vision. Existing drive and intake mappings are
+  preserved.
+- Prompt 12 adds vision state and vision hardware availability to TeleOp
+  telemetry without calling `reportTargetDetected(boolean)` or fabricating
+  target observations.
 
 ## Current public APIs
 
@@ -251,8 +264,11 @@
     - `void stopIntake()`
     - `void holdIntake()`
     - `void ejectIntake()`
+    - `void enableVision()`
+    - `void disableVision()`
     - `String getDriveStateName()`
     - `String getIntakeStateName()`
+    - `String getVisionStateName()`
     - `double getRequestedForward()`
     - `double getRequestedStrafe()`
     - `double getRequestedRotate()`
@@ -264,10 +280,11 @@
     - `boolean isVisionAvailable()`
 - `TeamARobot` subclasses `Robot`, owns `RobotHardware`, creates a
   `DriveSubsystem` from `RobotHardware.getDriveHardware()`, creates an
-  `IntakeSubsystem` from `RobotHardware.getIntakeHardware()`, and registers each
+  `IntakeSubsystem` from `RobotHardware.getIntakeHardware()`, creates a
+  `VisionSubsystem` from `RobotHardware.getVisionHardware()`, and registers each
   subsystem once in the constructor.
 - `TeamARobot` does not read driver controls, directly fetch configured devices,
-  expose drive or intake FSMs, or define any OpMode entry point.
+  expose drive, intake, or vision FSMs, or define any OpMode entry point.
 - `org.firstinspires.ftc.teamcode.core.input.InputManager`
     - `void update(Gamepad gamepad)`
     - `boolean isAHeld()`
@@ -312,14 +329,16 @@
     - `rotate = gamepad1.right_stick_x`
 - `TeamATeleOp` requests heading-hold mode when gamepad1 Y is just pressed and
   requests manual drive mode when gamepad1 X is just pressed.
+- `TeamATeleOp` requests vision enable when gamepad1 right bumper is just
+  pressed and vision disable when gamepad1 left bumper is just pressed.
 - `TeamATeleOp` uses a second `InputManager` for `gamepad2` operator controls:
     - A just pressed: `TeamARobot.startIntake()`
     - B just pressed: `TeamARobot.stopIntake()`
     - X just pressed: `TeamARobot.ejectIntake()`
     - Y just pressed: `TeamARobot.holdIntake()`
 - `TeamATeleOp` reports drive state, requested forward/strafe/rotate values,
-  intake state, intake availability, and the four last commanded wheel powers
-  exposed by `TeamARobot`.
+  intake state, intake availability, vision state, vision availability, and the
+  four last commanded wheel powers exposed by `TeamARobot`.
 - `org.firstinspires.ftc.teamcode.common.subsystems.intake.IntakeSubsystem`
     - constants: `DEFAULT_INTAKE_POWER`, `DEFAULT_EJECT_POWER`
     - `IntakeSubsystem(IntakeHardware intakeHardware)`
@@ -397,7 +416,9 @@
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
 - Prompt 11 validation command:
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
-- Last result: PASS during Prompt 11 using Android Studio JDK 21. The build
+- Prompt 12 validation command:
+    - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
+- Last result: PASS during Prompt 12 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -422,14 +443,19 @@
   commands, sensors, automatic hold detection, timed ejection, or team-specific
   intake geometry.
 - Prompt 11 does not create cameras, VisionPortal, AprilTagProcessor, OpenCV,
-  simulated target results, Team A vision controls, or robot composition
-  integration.
+  simulated target results, or Team A vision controls.
 - Vision remains unavailable until a later prompt adds real vision hardware
   behavior to `VisionHardware`.
+- Prompt 12 keeps vision optional. If configured vision hardware is absent,
+  Team A robot still initializes, drives, and runs intake because
+  `VisionSubsystem.enableVision()` remains safely disabled while
+  `VisionHardware` is unavailable.
+- Prompt 12 does not call `reportTargetDetected(boolean)` from TeleOp, add
+  camera or AprilTag code, or add temporary fake target controls.
 
 ## Next planned task
 
-Prompt 12: To be supplied by the sequential exercise.
+Prompt 13: To be supplied by the sequential exercise.
 
 ## Update instructions
 
