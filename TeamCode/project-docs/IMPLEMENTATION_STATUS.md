@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 12 complete, pending student review
-- Last completed prompt: Prompt 12: Integrate Team A vision through Robot and TeleOp
-- Last verified commit: 64ce539
+- Current sequential prompt: Prompt 13 complete, pending student review
+- Last completed prompt: Prompt 13: Implement beginner-readable autonomous sequencing
+- Last verified commit: 144ca44
 
 ## Completed work
 
@@ -134,6 +134,21 @@
 - Prompt 12 adds vision state and vision hardware availability to TeleOp
   telemetry without calling `reportTargetDetected(boolean)` or fabricating
   target observations.
+- Prompt 13 added beginner-readable non-blocking autonomous sequencing:
+    - `common.autonomous.AutoStep`
+    - `common.autonomous.AutoSequence`
+    - `common.autonomous.WaitStep`
+    - `common.autonomous.TimedDriveStep`
+    - `common.autonomous.TimedIntakeStep`
+    - `common.autonomous.AutonomousDriveControl`
+    - `common.autonomous.AutonomousIntakeControl`
+- Prompt 13 introduced tiny drive and intake control interfaces so shared
+  autonomous steps do not import the Team A robot package or access hardware,
+  subsystems, FSMs, or states directly.
+- Prompt 13 made `TeamARobot` implement the autonomous drive and intake control
+  interfaces and added `stopDrive()` as a narrow safe-stop robot API.
+- Prompt 13 uses FTC SDK `ElapsedTime` for non-blocking timed steps. No sleeps,
+  blocking waits, scheduler, or parallel action framework were added.
 
 ## Current public APIs
 
@@ -229,6 +244,7 @@
     - `void drive(double forward, double strafe, double rotate)`
     - `void enableManualDrive()`
     - `void disableDrive()`
+    - `void stopDrive()`
     - `void enableHeadingHold()`
     - `String getCurrentStateName()`
     - `double getRequestedForward()`
@@ -285,6 +301,9 @@
   subsystem once in the constructor.
 - `TeamARobot` does not read driver controls, directly fetch configured devices,
   expose drive, intake, or vision FSMs, or define any OpMode entry point.
+- `TeamARobot` implements `AutonomousDriveControl` and
+  `AutonomousIntakeControl` so shared autonomous steps can call narrow robot
+  APIs without depending directly on the Team A class.
 - `org.firstinspires.ftc.teamcode.core.input.InputManager`
     - `void update(Gamepad gamepad)`
     - `boolean isAHeld()`
@@ -399,6 +418,46 @@
     - Implements `State`; represents loss after a previous detection and returns
       to Searching on the next missing observation, or TargetAcquired if the
       target is reported again.
+- `org.firstinspires.ftc.teamcode.common.autonomous.AutoStep`
+    - `void start()`
+    - `void update()`
+    - `boolean isFinished()`
+    - `void stop()`
+    - `String getName()`
+- `org.firstinspires.ftc.teamcode.common.autonomous.AutoSequence`
+    - `AutoSequence()`
+    - `AutoSequence(AutoStep... steps)`
+    - `void addStep(AutoStep step)`
+    - `void start()`
+    - `void update()`
+    - `void stop()`
+    - `boolean isFinished()`
+    - `String getCurrentStepName()`
+- `AutoSequence` owns an ordered list of steps, starts one step at a time,
+  updates only the active step, stops a completed step before advancing, and
+  starts the next step during the same update call.
+- `AutoSequence` treats empty sequences as complete when started. Repeated
+  `start()` calls are safe no-ops. `stop()` before completion stops the active
+  step and marks the sequence complete. `update()` after completion is a safe
+  no-op.
+- `org.firstinspires.ftc.teamcode.common.autonomous.AutonomousDriveControl`
+    - `void enableManualDrive()`
+    - `void drive(double forward, double strafe, double rotate)`
+    - `void stopDrive()`
+- `org.firstinspires.ftc.teamcode.common.autonomous.AutonomousIntakeControl`
+    - `void startIntake()`
+    - `void stopIntake()`
+- `org.firstinspires.ftc.teamcode.common.autonomous.WaitStep`
+    - `WaitStep(double durationSeconds)`
+- `WaitStep` uses `ElapsedTime` and does not block the OpMode loop.
+- `org.firstinspires.ftc.teamcode.common.autonomous.TimedDriveStep`
+    - `TimedDriveStep(AutonomousDriveControl driveControl, double forward, double strafe, double rotate, double durationSeconds)`
+- `TimedDriveStep` requests manual drive and stored drive values during its
+  duration, then calls `stopDrive()` when finished or canceled.
+- `org.firstinspires.ftc.teamcode.common.autonomous.TimedIntakeStep`
+    - `TimedIntakeStep(AutonomousIntakeControl intakeControl, double durationSeconds)`
+- `TimedIntakeStep` requests intake during its duration, then calls
+  `stopIntake()` when finished or canceled.
 
 ## Build status
 
@@ -418,7 +477,9 @@
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
 - Prompt 12 validation command:
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
-- Last result: PASS during Prompt 12 using Android Studio JDK 21. The build
+- Prompt 13 validation command:
+    - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
+- Last result: PASS during Prompt 13 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -452,10 +513,15 @@
   `VisionHardware` is unavailable.
 - Prompt 12 does not call `reportTargetDetected(boolean)` from TeleOp, add
   camera or AprilTag code, or add temporary fake target controls.
+- Prompt 13 does not add autonomous OpModes, parallel actions, cancellation
+  groups, resource locking, InputManager routing, hardware access, sleeps, or a
+  general scheduler.
+- Timed autonomous steps rely on the OpMode continuing to call `robot.update()`
+  every loop after `AutoSequence.update()`.
 
 ## Next planned task
 
-Prompt 13: To be supplied by the sequential exercise.
+Prompt 14: To be supplied by the sequential exercise.
 
 ## Update instructions
 
