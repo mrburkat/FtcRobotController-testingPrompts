@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="11in" height="8.5in" viewBox="0 0 1100 850" role="img" aria-labelledby="title desc">
+  <title id="title">PVI-FTC Team A Architecture Top Layers</title>
+  <desc id="desc">A beginner-friendly Team A diagram showing composition and call flow from gamepad1 and gamepad2, through InputManager instances and OpModes, into TeamARobot.</desc>
+  <defs>
+    <style>
+      .page { fill: #f8fafc; }
+      .title { fill: #102033; font: 700 33px Arial, Helvetica, sans-serif; }
+      .subtitle { fill: #46566f; font: 400 16px Arial, Helvetica, sans-serif; }
+      .section-title { fill: #102033; font: 700 20px Arial, Helvetica, sans-serif; }
+      .box-title { fill: #102033; font: 700 17px Arial, Helvetica, sans-serif; }
+      .box-text { fill: #3d4c63; font: 400 13px Arial, Helvetica, sans-serif; }
+      .method { fill: #132238; font: 700 12px Arial, Helvetica, sans-serif; }
+      .note { fill: #334155; font: 400 14px Arial, Helvetica, sans-serif; }
+      .tiny { fill: #526176; font: 400 11px Arial, Helvetica, sans-serif; }
+      .external { fill: #ffffff; stroke: #94a3b8; stroke-width: 2.5; rx: 14; }
+      .controller-body { fill: #e2e8f0; stroke: #475569; stroke-width: 2.2; }
+      .controller-detail { fill: #475569; stroke: none; }
+      .idea { fill: #fffbeb; stroke: #f59e0b; stroke-width: 2.8; }
+      .teleop-container { fill: #eef6ff; stroke: #2563eb; stroke-width: 3; rx: 20; }
+      .auto-container { fill: #effaf4; stroke: #16824a; stroke-width: 3; rx: 20; }
+      .owned { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 14; }
+      .robot { fill: #f5f0ff; stroke: #8b5cf6; stroke-width: 3; rx: 16; }
+      .rule { fill: #fff7ed; stroke: #f59e0b; stroke-width: 2.5; rx: 12; }
+      .chip { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; rx: 10; }
+      .calls-chip { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; rx: 10; }
+      .arrow-read { stroke: #2563eb; stroke-width: 3.5; fill: none; marker-end: url(#blueArrow); }
+      .arrow-auto { stroke: #16824a; stroke-width: 3.5; fill: none; marker-end: url(#greenArrow); }
+      .arrow-call { stroke: #64748b; stroke-width: 3.5; fill: none; marker-end: url(#grayArrow); }
+      .divider { stroke: #d8dee9; stroke-width: 2; }
+    </style>
+    <marker id="blueArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="greenArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#16824a"/>
+    </marker>
+    <marker id="grayArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect class="page" width="1100" height="850"/>
+
+  <text class="title" x="550" y="54" text-anchor="middle">Team A Architecture: Top Layers</text>
+  <text class="subtitle" x="550" y="83" text-anchor="middle">This page stops at TeamARobot. Subsystems, FSM states, and hardware are shown on later pages.</text>
+
+  <rect class="rule" x="95" y="110" width="910" height="60" rx="12"/>
+  <text class="note" x="550" y="135" text-anchor="middle">Composition: an object contains other objects and uses them to do part of its job.</text>
+  <text class="method" x="550" y="157" text-anchor="middle">Containment boxes show ownership. Solid arrows show reads or method calls.</text>
+
+  <rect class="calls-chip" x="456" y="190" width="188" height="26" rx="10"/>
+  <text class="method" x="550" y="208" text-anchor="middle">solid arrows = reads/calls</text>
+
+  <text class="section-title" x="315" y="236" text-anchor="middle">Team A TeleOp Path</text>
+  <text class="section-title" x="825" y="246" text-anchor="middle">Team A Autonomous Path</text>
+
+  <!-- TeleOp container -->
+  <g transform="translate(184 254)">
+    <path class="controller-body" d="M 10 12 C 16 3 28 3 34 12 L 48 12 C 59 12 66 21 68 37 C 69 45 61 50 55 43 L 48 35 L 30 35 L 23 43 C 17 50 8 45 10 37 C 12 21 17 12 28 12 Z"/>
+    <rect class="controller-detail" x="22" y="22" width="12" height="4" rx="2"/>
+    <rect class="controller-detail" x="26" y="18" width="4" height="12" rx="2"/>
+    <circle class="controller-detail" cx="50" cy="22" r="3"/>
+    <circle class="controller-detail" cx="58" cy="28" r="3"/>
+    <text class="tiny" x="39" y="63" text-anchor="middle">driver</text>
+    <text class="tiny" x="39" y="76" text-anchor="middle">controller</text>
+  </g>
+
+  <g transform="translate(296 254)">
+    <path class="controller-body" d="M 10 12 C 16 3 28 3 34 12 L 48 12 C 59 12 66 21 68 37 C 69 45 61 50 55 43 L 48 35 L 30 35 L 23 43 C 17 50 8 45 10 37 C 12 21 17 12 28 12 Z"/>
+    <rect class="controller-detail" x="22" y="22" width="12" height="4" rx="2"/>
+    <rect class="controller-detail" x="26" y="18" width="4" height="12" rx="2"/>
+    <circle class="controller-detail" cx="50" cy="22" r="3"/>
+    <circle class="controller-detail" cx="58" cy="28" r="3"/>
+    <text class="tiny" x="39" y="63" text-anchor="middle">operator</text>
+    <text class="tiny" x="39" y="76" text-anchor="middle">controller</text>
+  </g>
+
+  <rect class="teleop-container" x="55" y="355" width="520" height="390" rx="20"/>
+  <text class="box-title" x="315" y="387" text-anchor="middle">TeamATeleOp</text>
+  <text class="box-text" x="315" y="409" text-anchor="middle">contains two InputManagers and one TeamARobot</text>
+
+  <rect class="external" x="85" y="440" width="128" height="74" rx="14"/>
+  <text class="box-title" x="149" y="468" text-anchor="middle">gamepad1</text>
+  <text class="tiny" x="149" y="492" text-anchor="middle">driver controller</text>
+
+  <rect class="owned" x="246" y="440" width="142" height="74" rx="14"/>
+  <text class="box-title" x="317" y="468" text-anchor="middle">driverInput</text>
+  <text class="tiny" x="317" y="492" text-anchor="middle">InputManager</text>
+
+  <rect class="external" x="85" y="552" width="128" height="74" rx="14"/>
+  <text class="box-title" x="149" y="580" text-anchor="middle">gamepad2</text>
+  <text class="tiny" x="149" y="604" text-anchor="middle">operator controller</text>
+
+  <rect class="owned" x="246" y="552" width="142" height="74" rx="14"/>
+  <text class="box-title" x="317" y="580" text-anchor="middle">operatorInput</text>
+  <text class="tiny" x="317" y="604" text-anchor="middle">InputManager</text>
+
+  <rect class="robot" x="420" y="493" width="125" height="82" rx="14"/>
+  <text class="box-title" x="482" y="525" text-anchor="middle">robot</text>
+  <text class="tiny" x="482" y="548" text-anchor="middle">TeamARobot</text>
+
+  <path class="arrow-read" d="M 223 330 L 223 392 L 149 392 L 149 440"/>
+  <path class="arrow-read" d="M 335 330 L 335 345 L 70 345 L 70 589 L 85 589"/>
+  <path class="arrow-read" d="M 213 477 L 236 477"/>
+  <path class="arrow-read" d="M 213 589 L 236 589"/>
+  <path class="arrow-call" d="M 388 477 L 404 477 L 404 518 L 420 518"/>
+  <path class="arrow-call" d="M 388 589 L 404 589 L 404 550 L 420 550"/>
+
+  <rect class="chip" x="98" y="660" width="434" height="62" rx="10"/>
+  <text class="method" x="315" y="683" text-anchor="middle">loop(): update both inputs, map controls</text>
+  <text class="box-text" x="315" y="704" text-anchor="middle">then call robot.drive(...), startIntake(), enableVision()</text>
+
+  <!-- Autonomous idea and container -->
+  <path class="idea" d="M 825 285
+      C 785 285 752 316 752 354
+      C 752 380 767 402 790 413
+      L 790 431
+      L 860 431
+      L 860 413
+      C 883 402 898 380 898 354
+      C 898 316 865 285 825 285 Z"/>
+  <line x1="793" y1="443" x2="857" y2="443" stroke="#f59e0b" stroke-width="2.8"/>
+  <line x1="800" y1="456" x2="850" y2="456" stroke="#f59e0b" stroke-width="2.8"/>
+  <text class="box-title" x="825" y="332" text-anchor="middle">Autonomous</text>
+  <text class="box-title" x="825" y="355" text-anchor="middle">plan</text>
+  <text class="tiny" x="825" y="382" text-anchor="middle">idea, not a class</text>
+
+  <rect class="auto-container" x="625" y="480" width="420" height="265" rx="20"/>
+  <text class="box-title" x="835" y="512" text-anchor="middle">TeamAAutoOpMode</text>
+  <text class="box-text" x="835" y="534" text-anchor="middle">contains an AutoSequence and one TeamARobot</text>
+
+  <rect class="owned" x="660" y="570" width="170" height="86" rx="14"/>
+  <text class="box-title" x="745" y="597" text-anchor="middle">sequence</text>
+  <text class="tiny" x="745" y="618" text-anchor="middle">AutoSequence</text>
+  <rect class="chip" x="680" y="630" width="48" height="20" rx="7"/>
+  <text class="tiny" x="704" y="644" text-anchor="middle">Step 1</text>
+  <rect class="chip" x="733" y="630" width="48" height="20" rx="7"/>
+  <text class="tiny" x="757" y="644" text-anchor="middle">Step 2</text>
+  <rect class="chip" x="786" y="630" width="28" height="20" rx="7"/>
+  <text class="tiny" x="800" y="644" text-anchor="middle">...</text>
+
+  <rect class="robot" x="875" y="570" width="135" height="86" rx="14"/>
+  <text class="box-title" x="942" y="605" text-anchor="middle">robot</text>
+  <text class="tiny" x="942" y="628" text-anchor="middle">TeamARobot</text>
+
+  <path class="arrow-auto" d="M 825 456 L 825 480"/>
+  <path class="arrow-auto" d="M 825 480 C 800 506 760 535 745 570"/>
+  <path class="arrow-call" d="M 830 613 L 865 613"/>
+
+  <rect class="chip" x="680" y="682" width="330" height="42" rx="10"/>
+  <text class="method" x="845" y="700" text-anchor="middle">loop(): sequence.update()</text>
+  <text class="method" x="845" y="718" text-anchor="middle">then robot.update()</text>
+
+  <line class="divider" x1="90" y1="775" x2="1010" y2="775"/>
+  <text class="note" x="550" y="808" text-anchor="middle">Both OpModes stop here by calling TeamARobot public methods. TeamARobot owns subsystems in the next diagram.</text>
+</svg>

@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="11in" height="8.5in" viewBox="0 0 1100 850" role="img" aria-labelledby="title desc">
+  <title id="title">TeamARobot Composition and Public Calls</title>
+  <desc id="desc">A beginner-friendly Team A diagram showing TeamARobot containment relationships, OpMode calls based on InputManager readings, and the subsystem methods TeamARobot calls.</desc>
+  <defs>
+    <style>
+      .page { fill: #f8fafc; }
+      .title { fill: #102033; font: 700 33px Arial, Helvetica, sans-serif; }
+      .subtitle { fill: #46566f; font: 400 16px Arial, Helvetica, sans-serif; }
+      .section-title { fill: #102033; font: 700 20px Arial, Helvetica, sans-serif; }
+      .box-title { fill: #102033; font: 700 18px Arial, Helvetica, sans-serif; }
+      .box-text { fill: #3d4c63; font: 400 13px Arial, Helvetica, sans-serif; }
+      .method { fill: #132238; font: 700 12px Arial, Helvetica, sans-serif; }
+      .note { fill: #334155; font: 400 14px Arial, Helvetica, sans-serif; }
+      .tiny { fill: #526176; font: 400 11px Arial, Helvetica, sans-serif; }
+      .opmode { fill: #eef6ff; stroke: #2563eb; stroke-width: 2.5; rx: 18; }
+      .robot-container { fill: #f5f0ff; stroke: #8b5cf6; stroke-width: 3; rx: 22; }
+      .subsystem { fill: #fff8e7; stroke: #f2b84b; stroke-width: 2.5; rx: 16; }
+      .hardware { fill: #ecfbfb; stroke: #38b2ac; stroke-width: 2.2; rx: 16; }
+      .wrapper { fill: #ffffff; stroke: #79c9c4; stroke-width: 1.7; rx: 12; }
+      .chip { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; rx: 10; }
+      .interface-chip { fill: #eef2ff; stroke: #818cf8; stroke-width: 1.7; rx: 10; }
+      .callout { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.8; stroke-dasharray: 8 6; rx: 10; }
+      .concept { fill: #eef2ff; stroke: #818cf8; stroke-width: 1.8; stroke-dasharray: 8 6; rx: 10; }
+      .rule { fill: #fff7ed; stroke: #f59e0b; stroke-width: 2.5; rx: 12; }
+      .divider { stroke: #d8dee9; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect class="page" width="1100" height="850"/>
+
+  <text class="title" x="550" y="54" text-anchor="middle">TeamARobot: Composition and Calls</text>
+  <text class="subtitle" x="550" y="83" text-anchor="middle">This page shows the Team Robot layer only. Subsystems are shown by class name; their internal FSMs are saved for another page.</text>
+
+  <rect class="rule" x="96" y="110" width="908" height="58" rx="12"/>
+  <text class="note" x="550" y="134" text-anchor="middle">Important: InputManager does not call TeamARobot directly.</text>
+  <text class="method" x="550" y="156" text-anchor="middle">TeamATeleOp reads InputManager, then calls TeamARobot public methods.</text>
+
+  <!-- OpMode call source -->
+  <rect class="opmode" x="45" y="210" width="285" height="500" rx="18"/>
+  <text class="section-title" x="188" y="246" text-anchor="middle">TeamATeleOp</text>
+  <text class="box-text" x="188" y="270" text-anchor="middle">uses InputManager results to call robot</text>
+
+  <rect class="chip" x="72" y="305" width="230" height="70" rx="10"/>
+  <text class="box-title" x="187" y="333" text-anchor="middle">driverInput</text>
+  <text class="tiny" x="187" y="357" text-anchor="middle">InputManager instance</text>
+
+  <rect class="chip" x="72" y="400" width="230" height="70" rx="10"/>
+  <text class="box-title" x="187" y="428" text-anchor="middle">operatorInput</text>
+  <text class="tiny" x="187" y="452" text-anchor="middle">InputManager instance</text>
+
+  <rect class="callout" x="72" y="500" width="230" height="158" rx="10"/>
+  <text class="box-title" x="187" y="526" text-anchor="middle">TeamATeleOp calls</text>
+  <text class="method" x="187" y="550" text-anchor="middle">drive(...)</text>
+  <text class="method" x="187" y="570" text-anchor="middle">enableManualDrive()</text>
+  <text class="method" x="187" y="590" text-anchor="middle">enableHeadingHold()</text>
+  <text class="method" x="187" y="610" text-anchor="middle">enableVision(), disableVision()</text>
+  <text class="method" x="187" y="630" text-anchor="middle">start/stop/eject/hold intake</text>
+  <text class="method" x="187" y="650" text-anchor="middle">every loop: robot.update()</text>
+
+  <!-- TeamARobot container -->
+  <rect class="robot-container" x="390" y="210" width="665" height="500" rx="22"/>
+  <text class="section-title" x="722" y="246" text-anchor="middle">TeamARobot extends Robot</text>
+  <text class="box-text" x="722" y="270" text-anchor="middle">contains RobotHardware and three registered subsystems</text>
+
+  <rect class="concept" x="462" y="286" width="245" height="28" rx="10"/>
+  <text class="tiny" x="584" y="304" text-anchor="middle">implements AutonomousDriveControl</text>
+  <rect class="concept" x="735" y="286" width="245" height="28" rx="10"/>
+  <text class="tiny" x="858" y="304" text-anchor="middle">implements AutonomousIntakeControl</text>
+
+  <rect class="hardware" x="430" y="318" width="190" height="352" rx="16"/>
+  <text class="box-title" x="525" y="352" text-anchor="middle">robotHardware</text>
+  <text class="tiny" x="525" y="373" text-anchor="middle">RobotHardware contains:</text>
+
+  <rect class="wrapper" x="450" y="390" width="150" height="78" rx="12"/>
+  <text class="box-title" x="525" y="421" text-anchor="middle">driveHardware</text>
+  <text class="tiny" x="525" y="446" text-anchor="middle">DriveHardware</text>
+
+  <rect class="wrapper" x="450" y="490" width="150" height="78" rx="12"/>
+  <text class="box-title" x="525" y="521" text-anchor="middle">intakeHardware</text>
+  <text class="tiny" x="525" y="546" text-anchor="middle">IntakeHardware</text>
+
+  <rect class="wrapper" x="450" y="590" width="150" height="78" rx="12"/>
+  <text class="box-title" x="525" y="621" text-anchor="middle">visionHardware</text>
+  <text class="tiny" x="525" y="646" text-anchor="middle">VisionHardware</text>
+
+  <rect class="subsystem" x="680" y="390" width="320" height="78" rx="16"/>
+  <text class="box-title" x="840" y="421" text-anchor="middle">driveSubsystem</text>
+  <text class="tiny" x="840" y="446" text-anchor="middle">DriveSubsystem: drive(), enableManualDrive(), enableHeadingHold()</text>
+
+  <rect class="subsystem" x="680" y="490" width="320" height="78" rx="16"/>
+  <text class="box-title" x="840" y="521" text-anchor="middle">intakeSubsystem</text>
+  <text class="tiny" x="840" y="546" text-anchor="middle">IntakeSubsystem: startIntake(), stopIntake(), hold(), eject()</text>
+
+  <rect class="subsystem" x="680" y="590" width="320" height="78" rx="16"/>
+  <text class="box-title" x="840" y="621" text-anchor="middle">visionSubsystem</text>
+  <text class="tiny" x="840" y="646" text-anchor="middle">VisionSubsystem: enableVision(), disableVision()</text>
+
+  <rect class="callout" x="430" y="682" width="570" height="30" rx="10"/>
+  <text class="tiny" x="715" y="701" text-anchor="middle">Robot lifecycle: initialize(), update(), stop(); update() calls each subsystem in registration order</text>
+
+  <line class="divider" x1="90" y1="746" x2="1010" y2="746"/>
+  <text class="note" x="550" y="780" text-anchor="middle">Not shown here: each subsystem contains its own FSM and states; those belong in the next architecture image.</text>
+</svg>
