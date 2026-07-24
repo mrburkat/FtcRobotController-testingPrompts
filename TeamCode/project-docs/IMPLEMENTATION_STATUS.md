@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 10 complete, pending student review
-- Last completed prompt: Prompt 10: Integrate Team A intake through Robot and TeleOp
-- Last verified commit: 87c2149
+- Current sequential prompt: Prompt 11 complete, pending student review
+- Last completed prompt: Prompt 11: Implement the vision subsystem FSM as a safe skeleton
+- Last verified commit: fe6a867
 
 ## Completed work
 
@@ -108,6 +108,19 @@
   mappings are preserved.
 - Prompt 10 adds intake state and intake hardware availability to TeleOp
   telemetry.
+- Prompt 11 added the shared vision subsystem skeleton and vision FSM:
+    - `common.subsystems.vision.VisionSubsystem`
+    - `common.subsystems.vision.VisionDisabledState`
+    - `common.subsystems.vision.SearchingState`
+    - `common.subsystems.vision.TargetAcquiredState`
+    - `common.subsystems.vision.TrackingState`
+    - `common.subsystems.vision.LostTargetState`
+- Prompt 11 keeps vision safe while `VisionHardware` is unavailable. Calling
+  `enableVision()` records the request, but the FSM stays disabled until the
+  hardware wrapper reports available.
+- Prompt 11 added `reportTargetDetected(boolean)` as a temporary external
+  observation hook for future processing code without exposing state instances
+  or implementing a camera pipeline.
 
 ## Current public APIs
 
@@ -334,6 +347,39 @@
 - `org.firstinspires.ftc.teamcode.common.subsystems.intake.EjectingState`
     - Implements `State`; runs intake in reverse using the configured eject
       power.
+- `org.firstinspires.ftc.teamcode.common.subsystems.vision.VisionSubsystem`
+    - `VisionSubsystem(VisionHardware visionHardware)`
+    - `void initialize()`
+    - `void update()`
+    - `void stop()`
+    - `String getName()`
+    - `void enableVision()`
+    - `void disableVision()`
+    - `void reportTargetDetected(boolean detected)`
+    - `String getCurrentStateName()`
+    - `boolean isAvailable()`
+- `VisionSubsystem` starts in `Disabled`, owns the shared `FSM`, and uses
+  deterministic transitions based on the enable request, hardware availability,
+  and the last externally reported target observation.
+- `reportTargetDetected(boolean)` records observations only while vision is
+  enabled and hardware is available. It does not simulate or invent target
+  detections.
+- `org.firstinspires.ftc.teamcode.common.subsystems.vision.VisionDisabledState`
+    - Implements `State`; clears target reports and represents no active search
+      or tracking.
+- `org.firstinspires.ftc.teamcode.common.subsystems.vision.SearchingState`
+    - Implements `State`; calls `VisionHardware.update()` while waiting for an
+      externally reported detection.
+- `org.firstinspires.ftc.teamcode.common.subsystems.vision.TargetAcquiredState`
+    - Implements `State`; represents the first positive observation for one FSM
+      update cycle, then transitions to Tracking if detection continues or
+      LostTarget if detection is lost.
+- `org.firstinspires.ftc.teamcode.common.subsystems.vision.TrackingState`
+    - Implements `State`; represents continued target detection.
+- `org.firstinspires.ftc.teamcode.common.subsystems.vision.LostTargetState`
+    - Implements `State`; represents loss after a previous detection and returns
+      to Searching on the next missing observation, or TargetAcquired if the
+      target is reported again.
 
 ## Build status
 
@@ -349,7 +395,9 @@
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
 - Prompt 10 validation command:
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
-- Last result: PASS during Prompt 10 using Android Studio JDK 21. The build
+- Prompt 11 validation command:
+    - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
+- Last result: PASS during Prompt 11 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -373,10 +421,15 @@
 - Prompt 10 does not add intake controls to `gamepad1`, autonomous intake
   commands, sensors, automatic hold detection, timed ejection, or team-specific
   intake geometry.
+- Prompt 11 does not create cameras, VisionPortal, AprilTagProcessor, OpenCV,
+  simulated target results, Team A vision controls, or robot composition
+  integration.
+- Vision remains unavailable until a later prompt adds real vision hardware
+  behavior to `VisionHardware`.
 
 ## Next planned task
 
-Prompt 11: To be supplied by the sequential exercise.
+Prompt 12: To be supplied by the sequential exercise.
 
 ## Update instructions
 
