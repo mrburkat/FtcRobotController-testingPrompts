@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 13 complete, pending student review
-- Last completed prompt: Prompt 13: Implement beginner-readable autonomous sequencing
-- Last verified commit: 144ca44
+- Current sequential prompt: Prompt 14 complete, pending student review
+- Last completed prompt: Prompt 14: Implement Team A Autonomous OpMode
+- Last verified commit: 4199d0a
 
 ## Completed work
 
@@ -149,6 +149,16 @@
   interfaces and added `stopDrive()` as a narrow safe-stop robot API.
 - Prompt 13 uses FTC SDK `ElapsedTime` for non-blocking timed steps. No sleeps,
   blocking waits, scheduler, or parallel action framework were added.
+- Prompt 14 added Team A's first autonomous OpMode:
+    - `opmodes.autonomous.TeamAAutoOpMode`
+- Prompt 14 uses the iterative FTC `OpMode` lifecycle so `AutoSequence.update()`
+  and `robot.update()` run every loop without blocking.
+- Prompt 14 builds a cautious demonstration sequence: drive forward at low power,
+  explicitly stop drive, run intake briefly, explicitly stop intake, wait
+  briefly, and end safely.
+- Prompt 14 keeps autonomous behavior behind public robot and `AutoSequence`
+  APIs. It does not use gamepads, `InputManager`, direct hardware access,
+  blocking waits, trajectories, encoders, IMU, or vision guidance.
 
 ## Current public APIs
 
@@ -458,6 +468,18 @@
     - `TimedIntakeStep(AutonomousIntakeControl intakeControl, double durationSeconds)`
 - `TimedIntakeStep` requests intake during its duration, then calls
   `stopIntake()` when finished or canceled.
+- `org.firstinspires.ftc.teamcode.opmodes.autonomous.TeamAAutoOpMode`
+    - FTC annotation: `@Autonomous(name = "Team A Autonomous", group = "Team A")`
+    - `void init()`
+    - `void start()`
+    - `void loop()`
+    - `void stop()`
+- `TeamAAutoOpMode` owns a `TeamARobot` and `AutoSequence`, initializes Team A
+  through `TeamARobot.initialize(HardwareMap)`, starts from safe stopped drive
+  and intake requests, updates the sequence and robot each loop, and stops both
+  the active sequence and robot on interruption.
+- `TeamAAutoOpMode` telemetry reports current autonomous step, sequence
+  completion, drive state, intake state, and vision state.
 
 ## Build status
 
@@ -479,7 +501,9 @@
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
 - Prompt 13 validation command:
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
-- Last result: PASS during Prompt 13 using Android Studio JDK 21. The build
+- Prompt 14 validation command:
+    - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
+- Last result: PASS during Prompt 14 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -518,10 +542,16 @@
   general scheduler.
 - Timed autonomous steps rely on the OpMode continuing to call `robot.update()`
   every loop after `AutoSequence.update()`.
+- Prompt 14 adds only a cautious demonstration autonomous routine. It does not
+  add trajectory, encoder, IMU, vision-guided, or team-strategy autonomous
+  behavior.
+- Prompt 14's explicit stop steps use zero-duration timed steps to make the
+  safety intent visible to students; the timed steps also stop their mechanisms
+  when they finish or are canceled.
 
 ## Next planned task
 
-Prompt 14: To be supplied by the sequential exercise.
+Prompt 15: To be supplied by the sequential exercise.
 
 ## Update instructions
 
