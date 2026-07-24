@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="11in" height="8.5in" viewBox="0 0 1100 850" role="img" aria-labelledby="title desc">
+  <title id="title">DriveSubsystem Architecture Example</title>
+  <desc id="desc">A beginner-friendly diagram showing DriveSubsystem object containment, its FSM and states, behavior request fields, and the DriveHardware wrapper with its four motor objects.</desc>
+  <defs>
+    <style>
+      .page { fill: #f8fafc; }
+      .title { fill: #102033; font: 700 33px Arial, Helvetica, sans-serif; }
+      .subtitle { fill: #46566f; font: 400 16px Arial, Helvetica, sans-serif; }
+      .section-title { fill: #102033; font: 700 20px Arial, Helvetica, sans-serif; }
+      .box-title { fill: #102033; font: 700 17px Arial, Helvetica, sans-serif; }
+      .box-text { fill: #3d4c63; font: 400 13px Arial, Helvetica, sans-serif; }
+      .method { fill: #132238; font: 700 12px Arial, Helvetica, sans-serif; }
+      .note { fill: #334155; font: 400 14px Arial, Helvetica, sans-serif; }
+      .tiny { fill: #526176; font: 400 11px Arial, Helvetica, sans-serif; }
+      .subsystem-container { fill: #fff8e7; stroke: #f2b84b; stroke-width: 3; rx: 22; }
+      .hardware { fill: #ecfbfb; stroke: #38b2ac; stroke-width: 2.5; rx: 18; }
+      .fsm { fill: #eef2ff; stroke: #818cf8; stroke-width: 2.5; rx: 18; }
+      .state { fill: #ffffff; stroke: #a5b4fc; stroke-width: 1.8; rx: 12; }
+      .motor { fill: #ffffff; stroke: #79c9c4; stroke-width: 1.8; rx: 12; }
+      .field { fill: #ffffff; stroke: #e5b95d; stroke-width: 1.8; rx: 12; }
+      .callout { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.8; stroke-dasharray: 8 6; rx: 12; }
+      .rule { fill: #fff7ed; stroke: #f59e0b; stroke-width: 2.5; rx: 12; }
+      .divider { stroke: #d8dee9; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect class="page" width="1100" height="850"/>
+
+  <text class="title" x="550" y="54" text-anchor="middle">DriveSubsystem: FSM and Hardware Example</text>
+  <text class="subtitle" x="550" y="83" text-anchor="middle">This page zooms into one subsystem. It shows object containment, requests, states, and the drive hardware wrapper.</text>
+
+  <rect class="rule" x="95" y="110" width="910" height="58" rx="12"/>
+  <text class="note" x="550" y="134" text-anchor="middle">TeamARobot requests drive behavior; DriveSubsystem stores the request.</text>
+  <text class="method" x="550" y="156" text-anchor="middle">The FSM chooses the active State during update(); the State tells DriveHardware what motor powers to apply.</text>
+
+  <rect class="callout" x="60" y="205" width="220" height="160" rx="12"/>
+  <text class="section-title" x="170" y="237" text-anchor="middle">Requests from TeamARobot</text>
+  <text class="method" x="170" y="270" text-anchor="middle">drive(forward, strafe, rotate)</text>
+  <text class="method" x="170" y="294" text-anchor="middle">enableManualDrive()</text>
+  <text class="method" x="170" y="318" text-anchor="middle">enableHeadingHold()</text>
+  <text class="method" x="170" y="342" text-anchor="middle">disableDrive()</text>
+
+  <rect class="subsystem-container" x="315" y="205" width="725" height="535" rx="22"/>
+  <text class="section-title" x="678" y="238" text-anchor="middle">driveSubsystem: DriveSubsystem</text>
+  <text class="box-text" x="678" y="262" text-anchor="middle">contains request fields, one FSM object, and one DriveHardware wrapper object</text>
+
+  <rect class="field" x="345" y="300" width="205" height="172" rx="12"/>
+  <text class="box-title" x="448" y="328" text-anchor="middle">request fields</text>
+  <text class="tiny" x="448" y="352" text-anchor="middle">stored by DriveSubsystem</text>
+  <text class="method" x="448" y="386" text-anchor="middle">requestedMode</text>
+  <text class="method" x="448" y="412" text-anchor="middle">requestedForward</text>
+  <text class="method" x="448" y="438" text-anchor="middle">requestedStrafe</text>
+  <text class="method" x="448" y="464" text-anchor="middle">requestedRotate</text>
+
+  <rect class="fsm" x="585" y="300" width="420" height="172" rx="18"/>
+  <text class="box-title" x="795" y="328" text-anchor="middle">fsm: FSM</text>
+  <text class="tiny" x="795" y="352" text-anchor="middle">starts in DisabledDriveState</text>
+  <rect class="state" x="610" y="380" width="112" height="58" rx="12"/>
+  <text class="method" x="666" y="405" text-anchor="middle">disabledState</text>
+  <text class="tiny" x="666" y="425" text-anchor="middle">Disabled</text>
+  <rect class="state" x="738" y="380" width="112" height="58" rx="12"/>
+  <text class="method" x="794" y="405" text-anchor="middle">manualState</text>
+  <text class="tiny" x="794" y="425" text-anchor="middle">Manual</text>
+  <rect class="state" x="866" y="380" width="112" height="58" rx="12"/>
+  <text class="method" x="922" y="405" text-anchor="middle">headingState</text>
+  <text class="tiny" x="922" y="425" text-anchor="middle">HeadingHold</text>
+
+  <rect class="callout" x="345" y="505" width="300" height="150" rx="12"/>
+  <text class="box-title" x="495" y="534" text-anchor="middle">Behavior policy</text>
+  <text class="box-text" x="495" y="563" text-anchor="middle">Transitions check requestedMode.</text>
+  <text class="box-text" x="495" y="586" text-anchor="middle">Only one transition fires per update.</text>
+  <text class="box-text" x="495" y="609" text-anchor="middle">States call DriveSubsystem helper methods.</text>
+  <text class="method" x="495" y="637" text-anchor="middle">stopDrive(), applyManualDrive(), applyHeadingHoldPlaceholder()</text>
+
+  <rect class="hardware" x="675" y="505" width="330" height="150" rx="18"/>
+  <text class="box-title" x="840" y="534" text-anchor="middle">driveHardware: DriveHardware</text>
+  <text class="tiny" x="840" y="557" text-anchor="middle">contains four required DcMotorEx objects</text>
+  <rect class="motor" x="700" y="580" width="130" height="28" rx="10"/>
+  <text class="method" x="765" y="599" text-anchor="middle">frontLeft</text>
+  <rect class="motor" x="850" y="580" width="130" height="28" rx="10"/>
+  <text class="method" x="915" y="599" text-anchor="middle">frontRight</text>
+  <rect class="motor" x="700" y="620" width="130" height="28" rx="10"/>
+  <text class="method" x="765" y="639" text-anchor="middle">rearLeft</text>
+  <rect class="motor" x="850" y="620" width="130" height="28" rx="10"/>
+  <text class="method" x="915" y="639" text-anchor="middle">rearRight</text>
+
+  <rect class="callout" x="675" y="675" width="330" height="44" rx="12"/>
+  <text class="method" x="840" y="702" text-anchor="middle">setMotorPowers(fl, fr, rl, rr), stop()</text>
+
+  <line class="divider" x1="90" y1="770" x2="1010" y2="770"/>
+  <text class="note" x="550" y="805" text-anchor="middle">Dashed boxes are explanations or concepts. Solid boxes are object instances contained by DriveSubsystem or DriveHardware.</text>
+</svg>
