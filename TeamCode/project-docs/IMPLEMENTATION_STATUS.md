@@ -3,9 +3,9 @@
 ## Repository baseline
 
 - Source repository: PVI-FTC fork of FtcRobotController
-- Current sequential prompt: Prompt 15 complete, pending student review
-- Last completed prompt: Prompt 15: Create Team B and Team C robot skeletons
-- Last verified commit: 1c0989c
+- Current sequential prompt: Prompt 16 complete, pending student review
+- Last completed prompt: Prompt 16: Create Team B/C TeleOp skeletons and perform the architecture audit
+- Last verified commit: 2083330
 
 ## Completed work
 
@@ -171,6 +171,18 @@
   vision behavior, or unique mechanisms.
 - Prompt 15 intentionally retains the small amount of composition duplication in
   the two skeleton classes rather than adding a broad common robot base class.
+- Prompt 16 added Team B and Team C driver-controlled OpMode skeletons:
+    - `opmodes.teleop.TeamBTeleOp`
+    - `opmodes.teleop.TeamCTeleOp`
+- Prompt 16 uses one `InputManager` per new TeleOp, initializes through the
+  corresponding robot boundary, calls `robot.update()` once per loop, stops the
+  robot in `stop()`, and publishes drive, intake, and vision telemetry.
+- Prompt 16 includes only the cautious common mecanum stick mapping because
+  `TeamBRobot` and `TeamCRobot` currently use the shared required drive
+  wrapper. Intake, vision, and mechanism mappings remain TODOs until each team
+  documents its final wiring and driver-control choices.
+- Prompt 16 completed an architecture audit of TeamCode. No clear local
+  architecture violations were found that required code fixes in this prompt.
 
 ## Current public APIs
 
@@ -440,6 +452,26 @@
 - `TeamATeleOp` reports drive state, requested forward/strafe/rotate values,
   intake state, intake availability, vision state, vision availability, and the
   four last commanded wheel powers exposed by `TeamARobot`.
+- `org.firstinspires.ftc.teamcode.opmodes.teleop.TeamBTeleOp`
+    - FTC annotation: `@TeleOp(name = "Team B TeleOp", group = "Team B")`
+    - `void init()`
+    - `void start()`
+    - `void loop()`
+    - `void stop()`
+- `TeamBTeleOp` owns a `TeamBRobot` and one `InputManager`, initializes Team B
+  through `TeamBRobot.initialize(HardwareMap)`, requests manual drive on start,
+  updates `gamepad1` input each loop, applies the cautious common drive mapping,
+  calls `robot.update()`, and reports basic drive/intake/vision diagnostics.
+- `org.firstinspires.ftc.teamcode.opmodes.teleop.TeamCTeleOp`
+    - FTC annotation: `@TeleOp(name = "Team C TeleOp", group = "Team C")`
+    - `void init()`
+    - `void start()`
+    - `void loop()`
+    - `void stop()`
+- `TeamCTeleOp` owns a `TeamCRobot` and one `InputManager`, initializes Team C
+  through `TeamCRobot.initialize(HardwareMap)`, requests manual drive on start,
+  updates `gamepad1` input each loop, applies the cautious common drive mapping,
+  calls `robot.update()`, and reports basic drive/intake/vision diagnostics.
 - `org.firstinspires.ftc.teamcode.common.subsystems.intake.IntakeSubsystem`
     - constants: `DEFAULT_INTAKE_POWER`, `DEFAULT_EJECT_POWER`
     - `IntakeSubsystem(IntakeHardware intakeHardware)`
@@ -577,7 +609,9 @@
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
 - Prompt 15 validation command:
     - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
-- Last result: PASS during Prompt 15 using Android Studio JDK 21. The build
+- Prompt 16 validation command:
+    - `JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew TeamCode:assembleDebug`
+- Last result: PASS during Prompt 16 using Android Studio JDK 21. The build
   completed `:TeamCode:assembleDebug` successfully after Gradle cache and
   dependency access were available.
 
@@ -629,10 +663,20 @@
   team-specific hardware wrappers, or mechanism-specific subsystem subclasses.
 - Prompt 15 keeps small robot-composition duplication in `TeamBRobot` and
   `TeamCRobot` because a shared base class would be premature for two skeletons.
+- Prompt 16's Team B and Team C TeleOps assume the teams are temporarily using
+  the shared baseline drive motor names: `frontLeft`, `frontRight`, `rearLeft`,
+  and `rearRight`.
+- Prompt 16 does not add Team B or Team C intake, vision, heading-hold, or
+  mechanism-specific controls. Those mappings are deferred until each team
+  documents its hardware and driver-control requirements.
+- Prompt 16 architecture audit deferred review: no broad refactors were made.
+  Continue watching the small duplication among Team A/B/C robot and TeleOp
+  composition as the teams diverge; extract common code only if repeated changes
+  demonstrate a stable shared responsibility.
 
 ## Next planned task
 
-Prompt 16: To be supplied by the sequential exercise.
+Prompt 17: To be supplied by the sequential exercise.
 
 ## Update instructions
 
