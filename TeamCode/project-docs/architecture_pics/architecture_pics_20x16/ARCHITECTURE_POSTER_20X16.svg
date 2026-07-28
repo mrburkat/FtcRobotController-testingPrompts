@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="18in" height="24in" viewBox="0 0 1800 2400" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="20in" height="16in" viewBox="0 0 2000 1600" role="img" aria-labelledby="title desc">
   <title id="title">PVI-FTC TeamCode Architecture Poster</title>
   <desc id="desc">A single-page teaching diagram showing how Gamepad input, OpModes, robot composition, subsystems, FSM states, hardware wrappers, and FTC SDK hardware relate to each other.</desc>
   <defs>
@@ -46,7 +46,7 @@
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b5cf6"/>
     </marker>
   </defs>
-
+  <g transform="translate(400.0000 0.0000) scale(0.666667)">
   <rect class="page" x="0" y="0" width="1800" height="2400"/>
 
   <text class="title" x="900" y="90" text-anchor="middle">PVI-FTC TeamCode Architecture</text>
@@ -100,7 +100,7 @@
   <text class="method" x="448" y="699" text-anchor="middle">start()</text>
   <rect class="code-chip" x="563" y="675" width="198" height="36" rx="12"/>
   <text class="method" x="662" y="699" text-anchor="middle">loop()</text>
-  <text class="body" x="135" y="744">Examples: TeamATeleOp, TeamBTeleOp, TeamCTeleOp</text>
+  <text class="body" x="135" y="744">Example: TeamXTeleOp</text>
   <text class="body" x="135" y="774">Maps InputManager values to Robot public methods.</text>
 
   <rect class="panel" x="945" y="575" width="760" height="230" rx="20"/>
@@ -112,7 +112,7 @@
   <text class="method" x="1298" y="699" text-anchor="middle">start()</text>
   <rect class="code-chip" x="1413" y="675" width="198" height="36" rx="12"/>
   <text class="method" x="1512" y="699" text-anchor="middle">loop()</text>
-  <text class="body" x="985" y="744">Example: TeamAAutoOpMode</text>
+  <text class="body" x="985" y="744">Example: TeamXAutoOpMode</text>
   <text class="body" x="985" y="774">Updates AutoSequence, then calls robot.update().</text>
 
   <path class="arrow-strong" d="M 760 495 L 760 535 C 760 560 735 575 700 575"/>
@@ -121,7 +121,7 @@
   <!-- Robot composition -->
   <rect class="purple-panel" x="230" y="900" width="1340" height="290" rx="24"/>
   <text class="section-title" x="900" y="945" text-anchor="middle">Team Robot: the composition boundary</text>
-  <text class="box-subtitle" x="900" y="980" text-anchor="middle">TeamARobot, TeamBRobot, TeamCRobot subclass Robot</text>
+  <text class="box-subtitle" x="900" y="980" text-anchor="middle">TeamXRobot subclasses Robot</text>
   <rect class="owner-chip" x="290" y="1015" width="250" height="42" rx="12"/>
   <text class="method" x="415" y="1042" text-anchor="middle">owns RobotHardware</text>
   <rect class="owner-chip" x="585" y="1015" width="270" height="42" rx="12"/>
@@ -234,4 +234,5 @@
   <text class="tiny" x="1642" y="1181" text-anchor="middle">blocking</text>
 
   <text class="small" x="900" y="2365" text-anchor="middle">Reading direction: top to bottom. Ownership direction: each layer owns or calls the layer below it.</text>
+  </g>
 </svg>

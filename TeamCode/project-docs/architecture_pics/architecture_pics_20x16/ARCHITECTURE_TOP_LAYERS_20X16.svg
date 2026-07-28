@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="11in" height="8.5in" viewBox="0 0 1100 850" role="img" aria-labelledby="title desc">
-  <title id="title">PVI-FTC Team A Architecture Top Layers</title>
-  <desc id="desc">A beginner-friendly Team A diagram showing composition and call flow from gamepad1 and gamepad2, through InputManager instances and OpModes, into TeamARobot.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="20in" height="16in" viewBox="0 0 2000 1600" role="img" aria-labelledby="title desc">
+  <title id="title">PVI-FTC Team X Architecture Top Layers</title>
+  <desc id="desc">A beginner-friendly team-neutral diagram showing composition and call flow from gamepad1 and gamepad2, through InputManager instances and OpModes, into TeamXRobot.</desc>
   <defs>
     <style>
       .page { fill: #f8fafc; }
@@ -38,11 +38,11 @@
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
     </marker>
   </defs>
-
+  <g transform="translate(0.0000 27.2727) scale(1.818182)">
   <rect class="page" width="1100" height="850"/>
 
-  <text class="title" x="550" y="54" text-anchor="middle">Team A Architecture: Top Layers</text>
-  <text class="subtitle" x="550" y="83" text-anchor="middle">This page stops at TeamARobot. Subsystems, FSM states, and hardware are shown on later pages.</text>
+  <text class="title" x="550" y="54" text-anchor="middle">Team X Architecture: Top Layers</text>
+  <text class="subtitle" x="550" y="83" text-anchor="middle">This page stops at TeamXRobot. Subsystems, FSM states, and hardware are shown on later pages.</text>
 
   <rect class="rule" x="95" y="110" width="910" height="60" rx="12"/>
   <text class="note" x="550" y="135" text-anchor="middle">Composition: an object contains other objects and uses them to do part of its job.</text>
@@ -51,8 +51,8 @@
   <rect class="calls-chip" x="456" y="190" width="188" height="26" rx="10"/>
   <text class="method" x="550" y="208" text-anchor="middle">solid arrows = reads/calls</text>
 
-  <text class="section-title" x="315" y="236" text-anchor="middle">Team A TeleOp Path</text>
-  <text class="section-title" x="825" y="246" text-anchor="middle">Team A Autonomous Path</text>
+  <text class="section-title" x="315" y="236" text-anchor="middle">Team X TeleOp Path</text>
+  <text class="section-title" x="825" y="246" text-anchor="middle">Team X Autonomous Path</text>
 
   <!-- TeleOp container -->
   <g transform="translate(184 254)">
@@ -76,8 +76,8 @@
   </g>
 
   <rect class="teleop-container" x="55" y="355" width="520" height="390" rx="20"/>
-  <text class="box-title" x="315" y="387" text-anchor="middle">TeamATeleOp</text>
-  <text class="box-text" x="315" y="409" text-anchor="middle">contains two InputManagers and one TeamARobot</text>
+  <text class="box-title" x="315" y="387" text-anchor="middle">TeamXTeleOp</text>
+  <text class="box-text" x="315" y="409" text-anchor="middle">contains two InputManagers and one TeamXRobot</text>
 
   <rect class="external" x="85" y="440" width="128" height="74" rx="14"/>
   <text class="box-title" x="149" y="468" text-anchor="middle">gamepad1</text>
@@ -97,7 +97,7 @@
 
   <rect class="robot" x="420" y="493" width="125" height="82" rx="14"/>
   <text class="box-title" x="482" y="525" text-anchor="middle">robot</text>
-  <text class="tiny" x="482" y="548" text-anchor="middle">TeamARobot</text>
+  <text class="tiny" x="482" y="548" text-anchor="middle">TeamXRobot</text>
 
   <path class="arrow-read" d="M 223 330 L 223 392 L 149 392 L 149 440"/>
   <path class="arrow-read" d="M 335 330 L 335 345 L 70 345 L 70 589 L 85 589"/>
@@ -106,9 +106,10 @@
   <path class="arrow-call" d="M 388 477 L 404 477 L 404 518 L 420 518"/>
   <path class="arrow-call" d="M 388 589 L 404 589 L 404 550 L 420 550"/>
 
-  <rect class="chip" x="98" y="660" width="434" height="62" rx="10"/>
-  <text class="method" x="315" y="683" text-anchor="middle">loop(): update both inputs, map controls</text>
-  <text class="box-text" x="315" y="704" text-anchor="middle">then call robot.drive(...), startIntake(), enableVision()</text>
+  <rect class="chip" x="98" y="648" width="434" height="78" rx="10"/>
+  <text class="method" x="315" y="673" text-anchor="middle">loop(): update both inputs</text>
+  <text class="box-text" x="315" y="695" text-anchor="middle">map controls to robot methods</text>
+  <text class="box-text" x="315" y="717" text-anchor="middle">then call robot.update()</text>
 
   <!-- Autonomous idea and container -->
   <path class="idea" d="M 825 285
@@ -126,8 +127,8 @@
   <text class="tiny" x="825" y="382" text-anchor="middle">idea, not a class</text>
 
   <rect class="auto-container" x="625" y="480" width="420" height="265" rx="20"/>
-  <text class="box-title" x="835" y="512" text-anchor="middle">TeamAAutoOpMode</text>
-  <text class="box-text" x="835" y="534" text-anchor="middle">contains an AutoSequence and one TeamARobot</text>
+  <text class="box-title" x="835" y="512" text-anchor="middle">TeamXAutoOpMode</text>
+  <text class="box-text" x="835" y="534" text-anchor="middle">contains an AutoSequence and one TeamXRobot</text>
 
   <rect class="owned" x="660" y="570" width="170" height="86" rx="14"/>
   <text class="box-title" x="745" y="597" text-anchor="middle">sequence</text>
@@ -141,10 +142,9 @@
 
   <rect class="robot" x="875" y="570" width="135" height="86" rx="14"/>
   <text class="box-title" x="942" y="605" text-anchor="middle">robot</text>
-  <text class="tiny" x="942" y="628" text-anchor="middle">TeamARobot</text>
+  <text class="tiny" x="942" y="628" text-anchor="middle">TeamXRobot</text>
 
-  <path class="arrow-auto" d="M 825 456 L 825 480"/>
-  <path class="arrow-auto" d="M 825 480 C 800 506 760 535 745 570"/>
+  <path class="arrow-auto" d="M 825 456 L 825 466 L 635 466 L 635 613 L 660 613"/>
   <path class="arrow-call" d="M 830 613 L 865 613"/>
 
   <rect class="chip" x="680" y="682" width="330" height="42" rx="10"/>
@@ -152,5 +152,6 @@
   <text class="method" x="845" y="718" text-anchor="middle">then robot.update()</text>
 
   <line class="divider" x1="90" y1="775" x2="1010" y2="775"/>
-  <text class="note" x="550" y="808" text-anchor="middle">Both OpModes stop here by calling TeamARobot public methods. TeamARobot owns subsystems in the next diagram.</text>
+  <text class="note" x="550" y="808" text-anchor="middle">Both OpModes stop here by calling TeamXRobot public methods. TeamXRobot owns subsystems in the next diagram.</text>
+  </g>
 </svg>
